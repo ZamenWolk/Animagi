@@ -1,0 +1,16 @@
+name: Animagi
+version: 1.0.0-SNAPSHOT
+description: Animagi plugin for Obscurus server
+load: STARTUP
+author: ZamenWolk
+main: com.zamenwolk.spigot.Animagi
+prefix: Animagi
+
+commands:
+  profile:
+    description: Visualize your profile of someone else's
+    usage: /profile <username>
+
+  points:
+    description: List, add or remove points to houses
+    usage: /points list <school> {or} /points <give/take> <point number> <player> <reason>
