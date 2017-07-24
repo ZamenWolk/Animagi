@@ -12,6 +12,7 @@ import com.zamenwolk.spigot.datas.House;
 import com.zamenwolk.spigot.datas.HouseData;
 import com.zamenwolk.spigot.datas.School;
 import com.zamenwolk.spigot.datas.SchoolData;
+import com.zamenwolk.spigot.helper.ConfigExtractor;
 import org.bukkit.configuration.Configuration;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.file.YamlConfiguration;
@@ -54,7 +55,7 @@ public class Animagi extends JavaPlugin
     public static List<House> getHousesOfSchool(String schoolName)
     {
         return houses.entrySet()
-                     .stream()
+                     .stream() //Make stream
                      .filter((Map.Entry<String, House> e) -> e.getValue().getSchool().getName().equalsIgnoreCase(schoolName)) //Filter with house name
                      .map(Map.Entry::getValue) //Map to stream of House objects
                      .collect(Collectors.toList()); //Make to list
@@ -154,19 +155,18 @@ public class Animagi extends JavaPlugin
     
     private void loadHouses(Configuration dataConf) //TODO finish that
     {
-    
         logger.info("Loading houses");
     
         for (String school : dataConf.getKeys(false))
         {
             logger.info("Loading houses of " + school);
-            List<String> currSchoolSec = dataConf.getStringList(school);
+            Map<String, Object> currSchoolSec = dataConf.getConfigurationSection(school).getValues(false);
             
-            for (String house : currSchoolSec)
+            for (Map.Entry<String, Object> house : currSchoolSec.entrySet())
             {
                 try
                 {
-                    houses.put(house, new House(house));
+                    houses.put(house.getKey(), new House(house.getKey()));
                 }
                 catch (IOException e)
                 {
@@ -174,7 +174,7 @@ public class Animagi extends JavaPlugin
                     try
                     {
                         School currSchool = getSchool(school);
-                        houses.put(house, new House(new HouseData(house, currSchool, 0), house));
+                        houses.put(house.getKey(), new House(new HouseData(house.getKey(), currSchool, 0), house.getKey()));
                     }
                     catch (IOException e1)
                     {
@@ -189,6 +189,8 @@ public class Animagi extends JavaPlugin
                     e.printStackTrace();
                     getPluginLoader().disablePlugin(this);
                 }
+    
+                ConfigExtractor.setObject(houses.get(house.getKey()), house.getValue());
             }
         }
     

@@ -4,6 +4,7 @@ import com.zamenwolk.spigot.Animagi;
 import com.zamenwolk.spigot.helper.ConfigExtractible;
 import com.zamenwolk.spigot.helper.DataModel;
 import org.apache.commons.lang3.tuple.Pair;
+import org.bukkit.configuration.ConfigurationSection;
 
 import java.io.*;
 import java.util.HashMap;
@@ -73,7 +74,12 @@ public class HouseData extends DataModel implements Serializable, ConfigExtracti
     @Override
     public void getFromConfig(Object config)
     {
-        //TODO this
+        if (config == null)
+            throw new IllegalArgumentException("config object is null");
+        
+        ConfigurationSection section = convert(config);
+        
+        //TODO finish writing this function
     }
     
     @Override
@@ -136,5 +142,18 @@ public class HouseData extends DataModel implements Serializable, ConfigExtracti
                ", school=" + school +
                ", points=" + points +
                '}';
+    }
+    
+    
+    private <Conv> Conv convert(Object origin)
+    {
+        try
+        {
+            return (Conv) origin;
+        }
+        catch (ClassCastException e)
+        {
+            throw new IllegalArgumentException("config not of desired structure");
+        }
     }
 }

@@ -1,6 +1,7 @@
 package com.zamenwolk.spigot.datas;
 
 import com.zamenwolk.spigot.Animagi;
+import com.zamenwolk.spigot.helper.ConfigExtractible;
 import com.zamenwolk.spigot.helper.DataManager;
 
 import java.io.File;
@@ -9,7 +10,7 @@ import java.io.IOException;
 /**
  * Created by Martin on 11/07/2017.
  */
-public class House extends DataManager<HouseData>
+public class House extends DataManager<HouseData> implements ConfigExtractible
 {
     private static final String houseFolder = "houses/";
     
@@ -54,5 +55,11 @@ public class House extends DataManager<HouseData>
         return "House{" +
                "data=" + data +
                '}';
+    }
+    
+    @Override
+    public void getFromConfig(Object config)
+    {
+        data.getFromConfig(config);
     }
 }

@@ -1,11 +1,41 @@
 Hogwarts:
-    - Slytherin
-    - Gryffindor
-    - Hufflepuff
-    - Ravenclaw
+    Slytherin:
+        traits:
+            - Resourcefulness: 15
+            - Cunning: 30
+            - Ambition: 50
+            - Creativity: 20
+    Gryffindor:
+        traits:
+            - Bravery: 40
+            - Chivalry: 10
+            - Courage: 50
+            - Daring: 20
+    Hufflepuff:
+        traits:
+            - Trustworthiness: 50
+            - Loyalty: 20
+            - Kindness: 40
+            - Just: 5
+            - Dedication: 10
+    Ravenclaw:
+        traits:
+            - Intelligence: 50
+            - Wit: 20
+            - Wisdom: 40
+            - Creativity: 10
+            - Originality: 5
 
 Ilvermony:
-    - Thunderbird
-    - Horned Serpent
-    - Pukwudgie
-    - Wampus
+    Thunderbird:
+        traits:
+            - Soulness: 100
+    Horned Serpent:
+        traits:
+            - Mindness: 100
+    Pukwudgie:
+        traits:
+            - Heartness: 100
+    Wampus:
+        traits:
+            - Bodyness: 100
