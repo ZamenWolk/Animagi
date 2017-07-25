@@ -8,6 +8,7 @@ import org.bukkit.configuration.ConfigurationSection;
 
 import java.io.*;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.function.Consumer;
 import java.util.function.Supplier;
@@ -20,7 +21,7 @@ public class HouseData extends DataModel implements Serializable, ConfigExtracti
     private String name;
     private School school;
     private int    points;
-    private Map<String, Integer> cf_traitsFactors;
+    private Map<String, Double> cf_traitsFactors;
     
     public HouseData(String house, School school, int points)
     {
@@ -77,9 +78,39 @@ public class HouseData extends DataModel implements Serializable, ConfigExtracti
         if (config == null)
             throw new IllegalArgumentException("config object is null");
         
-        ConfigurationSection section = convert(config);
+        double totalTraitFactor = 0;
+        ConfigurationSection section = this.<ConfigurationSection>convert(config).getConfigurationSection("traits");
+        if (section == null)
+            throw new IllegalArgumentException("config object doesn't have traits");
         
-        //TODO finish writing this function
+        Map<String, Object> traits = section.getValues(false);
+    
+        for (Map.Entry<String, Object> currTrait : traits.entrySet())
+        {
+            try
+            {
+                Double notIndexedFactor = Double.valueOf(currTrait.getValue().toString());
+                if (notIndexedFactor < 0)
+                    throw new IllegalArgumentException("Value of " + currTrait.getKey() + " is negative");
+                
+                if (notIndexedFactor > 0)
+                {
+                    totalTraitFactor += notIndexedFactor;
+                    cf_traitsFactors.put(currTrait.getKey(), notIndexedFactor);
+                }
+            }
+            catch (NumberFormatException e)
+            {
+                throw new IllegalArgumentException("Value of " + currTrait.getKey() + " is not a number");
+            }
+        }
+        
+        if (totalTraitFactor == 0)
+            throw new IllegalArgumentException("No valid traits found");
+        
+        double getFactor = 100 / totalTraitFactor;
+        
+        cf_traitsFactors.entrySet().parallelStream().forEach((Map.Entry<String, Double> cf_trait) -> cf_trait.setValue(cf_trait.getValue() * getFactor));
     }
     
     @Override
