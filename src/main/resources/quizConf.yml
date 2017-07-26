@@ -1,0 +1,46 @@
+quiz:
+- question: "Which of the following would you most hate people to call you?"
+  answers:
+    A:
+      text: "Ordinary"
+      traitGain:
+        ambition: 50
+        courage: 10
+        artistry: -10
+    B:
+      text: "Ignorant"
+      traitGain:
+        intelligence: 50
+        ambition: 10
+    C:
+      text: "Cowardly"
+      traitGain:
+        courage: 50
+        artistry: -10
+    D:
+      text: "Selfish"
+      traitGain:
+        loyalty: 50
+
+- question: "Given the choice, would you rather drink a potion that would guarantee you:"
+  answers:
+    A:
+      text: "Power"
+      traitGain:
+        ambition: 50
+        courage: 10
+        artistry: -20
+    B:
+      text: "Wisdom"
+      traitGain:
+        intelligence: 50
+        ambition: 10
+    C:
+      text: "Glory"
+      traitGain:
+        courage: 50
+    D:
+      text: "Love"
+      traitGain:
+        loyalty: 50
+        extroversion: 10
