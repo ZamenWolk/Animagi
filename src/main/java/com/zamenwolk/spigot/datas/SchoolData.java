@@ -9,7 +9,8 @@ package com.zamenwolk.spigot.datas;
 import com.zamenwolk.spigot.helper.DataModel;
 import org.apache.commons.lang3.tuple.Pair;
 
-import java.io.*;
+import java.io.IOException;
+import java.io.Serializable;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.function.Consumer;

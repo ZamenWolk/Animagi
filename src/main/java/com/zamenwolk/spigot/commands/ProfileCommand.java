@@ -3,7 +3,6 @@ package com.zamenwolk.spigot.commands;
 import com.google.common.collect.Lists;
 import com.zamenwolk.spigot.datas.House;
 import com.zamenwolk.spigot.datas.PlayerProfile;
-import com.zamenwolk.spigot.datas.PlayerProfileData;
 import com.zamenwolk.spigot.helper.TargetCommandExecutor;
 import org.bukkit.ChatColor;
 import org.bukkit.command.Command;

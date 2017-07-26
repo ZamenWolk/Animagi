@@ -1,7 +1,6 @@
 package com.zamenwolk.spigot.datas;
 
 import com.zamenwolk.spigot.Animagi;
-import com.zamenwolk.spigot.datas.SchoolData;
 import com.zamenwolk.spigot.helper.DataManager;
 
 import java.io.File;

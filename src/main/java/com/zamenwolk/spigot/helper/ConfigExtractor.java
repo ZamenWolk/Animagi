@@ -2,7 +2,6 @@ package com.zamenwolk.spigot.helper;
 
 import org.bukkit.configuration.ConfigurationSection;
 
-import java.io.ObjectInputStream;
 import java.lang.reflect.InvocationTargetException;
 import java.util.Iterator;
 import java.util.LinkedList;

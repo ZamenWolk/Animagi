@@ -16,7 +16,6 @@ import com.zamenwolk.spigot.helper.ConfigExtractor;
 import org.bukkit.configuration.Configuration;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.file.YamlConfiguration;
-import org.bukkit.plugin.PluginLogger;
 import org.bukkit.plugin.java.JavaPlugin;
 
 import java.io.File;
@@ -24,10 +23,7 @@ import java.io.IOException;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Set;
-import java.util.logging.Level;
 import java.util.logging.Logger;
-import java.util.stream.Collector;
 import java.util.stream.Collectors;
 
 /**
@@ -162,19 +158,21 @@ public class Animagi extends JavaPlugin
             logger.info("Loading houses of " + school);
             Map<String, Object> currSchoolSec = dataConf.getConfigurationSection(school).getValues(false);
             
-            for (Map.Entry<String, Object> house : currSchoolSec.entrySet())
+            for (Map.Entry<String, Object> houseEntry : currSchoolSec.entrySet())
             {
+                String houseName = houseEntry.getKey();
+                ConfigurationSection houseConf = (ConfigurationSection) houseEntry.getValue();
                 try
                 {
-                    houses.put(house.getKey(), new House(house.getKey()));
+                    houses.put(houseName, new House(houseName));
                 }
                 catch (IOException e)
                 {
-                    logger.warning("House " + house + " not found and will be created ! Make sure it's normal ! Is it the first time using the plugin here ? Did you change the config ?");
+                    logger.warning("House " + houseName + " not found and will be created ! Make sure it's normal ! Is it the first time using the plugin here ? Did you change the config ?");
                     try
                     {
                         School currSchool = getSchool(school);
-                        houses.put(house.getKey(), new House(new HouseData(house.getKey(), currSchool, 0), house.getKey()));
+                        houses.put(houseName, new House(new HouseData(houseName, currSchool, 0), houseName));
                     }
                     catch (IOException e1)
                     {
@@ -190,7 +188,7 @@ public class Animagi extends JavaPlugin
                     getPluginLoader().disablePlugin(this);
                 }
     
-                ConfigExtractor.setObject(houses.get(house.getKey()), house.getValue());
+                ConfigExtractor.setObject(houses.get(houseName), houseConf);
             }
         }
     

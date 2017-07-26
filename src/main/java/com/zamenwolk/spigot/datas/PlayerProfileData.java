@@ -1,6 +1,5 @@
 package com.zamenwolk.spigot.datas;
 
-import com.avaje.ebean.validation.NotNull;
 import com.zamenwolk.spigot.Animagi;
 import com.zamenwolk.spigot.helper.DataModel;
 import org.apache.commons.lang3.tuple.Pair;
