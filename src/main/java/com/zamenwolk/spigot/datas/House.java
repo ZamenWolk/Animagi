@@ -3,6 +3,7 @@ package com.zamenwolk.spigot.datas;
 import com.zamenwolk.spigot.Animagi;
 import com.zamenwolk.spigot.helper.ConfigExtractible;
 import com.zamenwolk.spigot.helper.DataManager;
+import org.bukkit.configuration.ConfigurationSection;
 
 import java.io.File;
 import java.io.IOException;
@@ -58,7 +59,7 @@ public class House extends DataManager<HouseData> implements ConfigExtractible
     }
     
     @Override
-    public void getFromConfig(Object config)
+    public void getFromConfig(ConfigurationSection config)
     {
         data.getFromConfig(config);
     }

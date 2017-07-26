@@ -7,6 +7,7 @@
 package com.zamenwolk.spigot.datas;
 
 import com.zamenwolk.spigot.helper.ConfigExtractible;
+import org.bukkit.configuration.ConfigurationSection;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -26,7 +27,7 @@ public class Question implements ConfigExtractible
     }
     
     @Override
-    public void getFromConfig(Object config)
+    public void getFromConfig(ConfigurationSection config)
     {
     
     }

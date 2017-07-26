@@ -73,12 +73,12 @@ public class HouseData extends DataModel implements Serializable, ConfigExtracti
     }
     
     @Override
-    public void getFromConfig(Object config)
+    public void getFromConfig(ConfigurationSection config)
     {
         if (config == null)
             throw new IllegalArgumentException("config object is null");
         
-        ConfigurationSection section = this.<ConfigurationSection>convert(config).getConfigurationSection("traits");
+        ConfigurationSection section = config.getConfigurationSection("traits");
         if (section == null)
             throw new IllegalArgumentException("config object doesn't have traits");
         
@@ -163,18 +163,5 @@ public class HouseData extends DataModel implements Serializable, ConfigExtracti
                ", school=" + school +
                ", points=" + points +
                '}';
-    }
-    
-    
-    private <Conv> Conv convert(Object origin)
-    {
-        try
-        {
-            return (Conv) origin;
-        }
-        catch (ClassCastException e)
-        {
-            throw new IllegalArgumentException("config not of desired structure");
-        }
     }
 }

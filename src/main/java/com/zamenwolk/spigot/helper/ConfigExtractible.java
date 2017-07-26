@@ -13,5 +13,5 @@ import org.bukkit.configuration.ConfigurationSection;
  */
 public interface ConfigExtractible
 {
-    void getFromConfig(Object config);
+    void getFromConfig(ConfigurationSection config);
 }

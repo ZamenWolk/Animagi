@@ -1,5 +1,7 @@
 package com.zamenwolk.spigot.helper;
 
+import org.bukkit.configuration.ConfigurationSection;
+
 import java.io.ObjectInputStream;
 import java.lang.reflect.InvocationTargetException;
 import java.util.Iterator;
@@ -13,7 +15,7 @@ public class ConfigExtractor
 {
     private ConfigExtractor() {}
     
-    public static <Data extends ConfigExtractible> Data createObject(Class<Data> dataClass, Object configObject)
+    public static <Data extends ConfigExtractible> Data createObject(Class<Data> dataClass, ConfigurationSection configObject)
     throws InvocationTargetException
     {
         try
@@ -36,12 +38,12 @@ public class ConfigExtractor
         }
     }
     
-    public static <Data extends ConfigExtractible> List<Data> createList(Class<Data> dataClass, List<Object> configObject)
+    public static <Data extends ConfigExtractible> List<Data> createList(Class<Data> dataClass, List<ConfigurationSection> configObject)
     throws InvocationTargetException
     {
         List<Data> ret = new LinkedList<>();
         
-        for (Object currObj : configObject)
+        for (ConfigurationSection currObj : configObject)
         {
             ret.add(createObject(dataClass, currObj));
         }
@@ -49,20 +51,20 @@ public class ConfigExtractor
         return ret;
     }
     
-    public static <Data extends ConfigExtractible> void setObject(Data object, Object configObject)
+    public static <Data extends ConfigExtractible> void setObject(Data object, ConfigurationSection configObject)
     {
         object.getFromConfig(configObject);
     }
     
-    public static <Data extends ConfigExtractible> void setList(List<Data> dataList, List<Object> configObject)
+    public static <Data extends ConfigExtractible> void setList(List<Data> dataList, List<ConfigurationSection> configObject)
     {
         Iterator<Data> dataIterator = dataList.iterator();
-        Iterator<Object> configIterator = configObject.iterator();
+        Iterator<ConfigurationSection> configIterator = configObject.iterator();
         
         while (dataIterator.hasNext() && configIterator.hasNext())
         {
             Data currData = dataIterator.next();
-            Object currConfig = configIterator.next();
+            ConfigurationSection currConfig = configIterator.next();
             
             setObject(currData, currConfig);
         }
