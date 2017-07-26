@@ -78,7 +78,6 @@ public class HouseData extends DataModel implements Serializable, ConfigExtracti
         if (config == null)
             throw new IllegalArgumentException("config object is null");
         
-        double totalTraitFactor = 0;
         ConfigurationSection section = this.<ConfigurationSection>convert(config).getConfigurationSection("traits");
         if (section == null)
             throw new IllegalArgumentException("config object doesn't have traits");
@@ -90,14 +89,9 @@ public class HouseData extends DataModel implements Serializable, ConfigExtracti
             try
             {
                 Double notIndexedFactor = Double.valueOf(currTrait.getValue().toString());
-                if (notIndexedFactor < 0)
-                    throw new IllegalArgumentException("Value of " + currTrait.getKey() + " is negative");
                 
-                if (notIndexedFactor > 0)
-                {
-                    totalTraitFactor += notIndexedFactor;
+                if (notIndexedFactor != 0)
                     cf_traitsFactors.put(currTrait.getKey(), notIndexedFactor);
-                }
             }
             catch (NumberFormatException e)
             {
@@ -105,12 +99,8 @@ public class HouseData extends DataModel implements Serializable, ConfigExtracti
             }
         }
         
-        if (totalTraitFactor == 0)
+        if (cf_traitsFactors.size() == 0)
             throw new IllegalArgumentException("No valid traits found");
-        
-        double getFactor = 100 / totalTraitFactor;
-        
-        cf_traitsFactors.entrySet().parallelStream().forEach((Map.Entry<String, Double> cf_trait) -> cf_trait.setValue(cf_trait.getValue() * getFactor));
     }
     
     @Override
