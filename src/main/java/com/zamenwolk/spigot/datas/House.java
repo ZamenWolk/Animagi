@@ -59,7 +59,7 @@ public class House extends DataManager<HouseData> implements ConfigExtractible
     }
     
     @Override
-    public void getFromConfig(ConfigurationSection config)
+    public void getFromConfig(Object config)
     {
         data.getFromConfig(config);
     }

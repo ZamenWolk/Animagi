@@ -72,15 +72,17 @@ public class HouseData extends DataModel implements Serializable, ConfigExtracti
     private void readObject(ObjectInputStream in) throws IOException, ClassNotFoundException
     {
         objectReader(in);
+        cf_traitsFactors = new HashMap<>();
     }
     
     @Override
-    public void getFromConfig(ConfigurationSection config)
+    public void getFromConfig(Object config)
     {
         if (config == null)
             throw new IllegalArgumentException("config object is null");
+        ConfigurationSection actConf = (ConfigurationSection) config;
         
-        ConfigurationSection section = config.getConfigurationSection("traits");
+        ConfigurationSection section = actConf.getConfigurationSection("traits");
         if (section == null)
             throw new IllegalArgumentException("config object doesn't have traits");
         
@@ -93,7 +95,7 @@ public class HouseData extends DataModel implements Serializable, ConfigExtracti
                 Double notIndexedFactor = Double.valueOf(currTrait.getValue().toString());
                 
                 if (notIndexedFactor != 0)
-                    cf_traitsFactors.put(currTrait.getKey(), notIndexedFactor);
+                    cf_traitsFactors.put(currTrait.getKey().toLowerCase(), notIndexedFactor);
             }
             catch (NumberFormatException e)
             {

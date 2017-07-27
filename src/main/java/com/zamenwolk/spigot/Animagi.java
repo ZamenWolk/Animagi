@@ -8,10 +8,7 @@ package com.zamenwolk.spigot;
 
 import com.zamenwolk.spigot.commands.PointsCommand;
 import com.zamenwolk.spigot.commands.ProfileCommand;
-import com.zamenwolk.spigot.datas.House;
-import com.zamenwolk.spigot.datas.HouseData;
-import com.zamenwolk.spigot.datas.School;
-import com.zamenwolk.spigot.datas.SchoolData;
+import com.zamenwolk.spigot.datas.*;
 import com.zamenwolk.spigot.helper.ConfigExtractor;
 import org.bukkit.configuration.Configuration;
 import org.bukkit.configuration.ConfigurationSection;
@@ -20,9 +17,11 @@ import org.bukkit.plugin.java.JavaPlugin;
 
 import java.io.File;
 import java.io.IOException;
+import java.lang.reflect.InvocationTargetException;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.logging.Level;
 import java.util.logging.Logger;
 import java.util.stream.Collectors;
 
@@ -33,7 +32,9 @@ public class Animagi extends JavaPlugin
 {
     public static final Logger logger = Logger.getLogger(Animagi.class.getName());
     public static final String dataOrganizationFile = "dataConf.yml";
+    public static final String quizConfigFile = "quizConf.yml";
     
+    private static List<Question>      quiz;
     private static File                dataFolder;
     private static Map<String, School> schools;
     private static Map<String, House>  houses;
@@ -107,14 +108,35 @@ public class Animagi extends JavaPlugin
         dataFolder = new File(this.getDataFolder(), "data/");
         schools = new HashMap<>();
         houses = new HashMap<>();
-    
-        YamlConfiguration dataConf = YamlConfiguration.loadConfiguration(new File(getDataFolder(), dataOrganizationFile));
-    
-        loadSchools(dataConf);
-        loadHouses(dataConf);
+        
+        try
+        {
+            YamlConfiguration dataConf = YamlConfiguration.loadConfiguration(new File(getDataFolder(), dataOrganizationFile));
+            YamlConfiguration quizConf = YamlConfiguration.loadConfiguration(new File(getDataFolder(), quizConfigFile));
+        
+            loadSchools(dataConf);
+            loadHouses(dataConf);
+            loadQuiz(quizConf);
+        }
+        catch (Exception e)
+        {
+            logger.log(Level.SEVERE, "Exception thrown", e);
+            getPluginLoader().disablePlugin(this);
+        }
     }
     
-    private void loadSchools(Configuration dataConf)
+    private void loadQuiz(Configuration quizConf) throws InvocationTargetException
+    {
+        logger.info("Loading questions");
+        
+        List<?> questionList = quizConf.getList("quiz");
+        
+        quiz = ConfigExtractor.createList(Question.class, (List<Object>) questionList);
+        
+        logger.info("Questions loaded");
+    }
+    
+    private void loadSchools(Configuration dataConf) throws IOException, ClassNotFoundException
     {
         logger.info("Loading schools");
         
@@ -127,29 +149,14 @@ public class Animagi extends JavaPlugin
             catch (IOException e)
             {
                 logger.warning("School " + school + " not found and will be created ! Make sure it's normal ! Is it the first time using the plugin here ? Did you change the config ?");
-                try
-                {
-                    schools.put(school, new School(new SchoolData(school), school));
-                }
-                catch (IOException e1)
-                {
-                    logger.severe("Severe error occured. Disabling plugin");
-                    e.printStackTrace();
-                    getPluginLoader().disablePlugin(this);
-                }
-            }
-            catch (ClassNotFoundException e)
-            {
-                logger.severe("Severe error occured. Disabling plugin");
-                e.printStackTrace();
-                getPluginLoader().disablePlugin(this);
+                schools.put(school, new School(new SchoolData(school), school));
             }
         }
     
         logger.info("Schools loaded");
     }
     
-    private void loadHouses(Configuration dataConf) //TODO finish that
+    private void loadHouses(Configuration dataConf) throws IOException, ClassNotFoundException //TODO finish that
     {
         logger.info("Loading houses");
     
@@ -169,23 +176,8 @@ public class Animagi extends JavaPlugin
                 catch (IOException e)
                 {
                     logger.warning("House " + houseName + " not found and will be created ! Make sure it's normal ! Is it the first time using the plugin here ? Did you change the config ?");
-                    try
-                    {
-                        School currSchool = getSchool(school);
-                        houses.put(houseName, new House(new HouseData(houseName, currSchool, 0), houseName));
-                    }
-                    catch (IOException e1)
-                    {
-                        logger.severe("Severe error occured. Disabling plugin");
-                        e.printStackTrace();
-                        getPluginLoader().disablePlugin(this);
-                    }
-                }
-                catch (ClassNotFoundException e)
-                {
-                    logger.severe("Severe error occured. Disabling plugin");
-                    e.printStackTrace();
-                    getPluginLoader().disablePlugin(this);
+                    School currSchool = getSchool(school);
+                    houses.put(houseName, new House(new HouseData(houseName, currSchool, 0), houseName));
                 }
     
                 ConfigExtractor.setObject(houses.get(houseName), houseConf);

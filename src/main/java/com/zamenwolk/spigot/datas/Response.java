@@ -28,13 +28,14 @@ public class Response implements ConfigExtractible
     }
     
     @Override
-    public void getFromConfig(ConfigurationSection config)
+    public void getFromConfig(Object config)
     {
-        responseText = config.getString("text", null);
+        Map<String, Object> actConf = (Map<String, Object>) config;
+        responseText = (String) actConf.getOrDefault("text", null);
         if (responseText == null)
             throw new IllegalArgumentException("No answer given");
         
-        for (Map.Entry<String, Object> e : config.getConfigurationSection("traitGain").getValues(false).entrySet())
+        for (Map.Entry<String, Object> e : ((Map<String, Object>)actConf.get("traitGain")).entrySet())
         {
             try
             {

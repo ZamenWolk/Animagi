@@ -30,16 +30,17 @@ public class Question implements ConfigExtractible
     }
     
     @Override
-    public void getFromConfig(ConfigurationSection config)
+    public void getFromConfig(Object config)
     {
-        questionText = config.getString("question", null);
+        Map<String, Object> actConf = (Map<String, Object>) config;
+        questionText = (String) actConf.getOrDefault("question", null);
         if (questionText == null)
             throw new  IllegalArgumentException("No question text given for question");
         
-        Map<String, ConfigurationSection> confMap = new HashMap<>();
-        for (Map.Entry<String, Object> e : config.getConfigurationSection("answers").getValues(false).entrySet())
+        Map<String, Object> confMap = new HashMap<>();
+        for (Map.Entry<String, Object> e : ((Map<String, Object>)actConf.get("answers")).entrySet())
         {
-            ConfigurationSection currSec = (ConfigurationSection) e.getValue();
+            Map<String, Object> currSec = (Map<String, Object>) e.getValue();
             confMap.put(e.getKey(), currSec);
         }
     
