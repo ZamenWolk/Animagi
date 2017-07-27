@@ -7,13 +7,16 @@
 package com.zamenwolk.spigot.datas;
 
 import com.zamenwolk.spigot.helper.ConfigExtractible;
+import com.zamenwolk.spigot.helper.ConfigExtractor;
 import org.bukkit.configuration.ConfigurationSection;
 
+import java.lang.reflect.InvocationTargetException;
 import java.util.HashMap;
 import java.util.Map;
 
 /**
- * Created by Martin on 26/07/2017.
+ * Author: Martin
+ * created on 26/07/2017.
  */
 public class Question implements ConfigExtractible
 {
@@ -29,6 +32,26 @@ public class Question implements ConfigExtractible
     @Override
     public void getFromConfig(ConfigurationSection config)
     {
+        questionText = config.getString("question", null);
+        if (questionText == null)
+            throw new  IllegalArgumentException("No question text given for question");
+        
+        Map<String, ConfigurationSection> confMap = new HashMap<>();
+        for (Map.Entry<String, Object> e : config.getConfigurationSection("answers").getValues(false).entrySet())
+        {
+            ConfigurationSection currSec = (ConfigurationSection) e.getValue();
+            confMap.put(e.getKey(), currSec);
+        }
     
+        try
+        {
+            responseMap = ConfigExtractor.createMap(Response.class, confMap);
+        }
+        catch (InvocationTargetException e)
+        {
+            throw new IllegalArgumentException("Invocation target exception", e);
+        }
+        if (responseMap.size() == 0)
+            throw new IllegalArgumentException("No answers given for question");
     }
 }

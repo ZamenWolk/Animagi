@@ -2,13 +2,13 @@ package com.zamenwolk.spigot.helper;
 
 import org.bukkit.configuration.ConfigurationSection;
 
+import javax.xml.crypto.Data;
 import java.lang.reflect.InvocationTargetException;
-import java.util.Iterator;
-import java.util.LinkedList;
-import java.util.List;
+import java.util.*;
 
 /**
- * Created by Martin on 20/07/2017.
+ * Author: Martin
+ * created on 20/07/2017.
  */
 public class ConfigExtractor
 {
@@ -50,6 +50,19 @@ public class ConfigExtractor
         return ret;
     }
     
+    public static <Key, Data extends ConfigExtractible> Map<Key, Data> createMap(Class<Data> dataClass, Map<Key, ConfigurationSection> configObject)
+    throws InvocationTargetException
+    {
+        Map<Key, Data> ret = new HashMap<>();
+        
+        for (Map.Entry<Key, ConfigurationSection> entry : configObject.entrySet())
+        {
+            ret.put(entry.getKey(), createObject(dataClass, entry.getValue()));
+        }
+        
+        return ret;
+    }
+    
     public static <Data extends ConfigExtractible> void setObject(Data object, ConfigurationSection configObject)
     {
         object.getFromConfig(configObject);
@@ -66,6 +79,15 @@ public class ConfigExtractor
             ConfigurationSection currConfig = configIterator.next();
             
             setObject(currData, currConfig);
+        }
+    }
+    
+    public static <Key, Data extends ConfigExtractible> void setMap(Map<Key, Data> dataMap, Map<Key, ConfigurationSection> configObject)
+    {
+        for (Map.Entry<Key, Data> d : dataMap.entrySet())
+        {
+            if (configObject.containsKey(d.getKey()))
+                setObject(d.getValue(), configObject.get(d.getKey()));
         }
     }
 }

@@ -13,7 +13,8 @@ import java.util.HashMap;
 import java.util.Map;
 
 /**
- * Created by Martin on 26/07/2017.
+ * Author: Martin
+ * created on 26/07/2017.
  */
 public class Response implements ConfigExtractible
 {
@@ -29,6 +30,26 @@ public class Response implements ConfigExtractible
     @Override
     public void getFromConfig(ConfigurationSection config)
     {
+        responseText = config.getString("text", null);
+        if (responseText == null)
+            throw new IllegalArgumentException("No answer given");
+        
+        for (Map.Entry<String, Object> e : config.getConfigurationSection("traitGain").getValues(false).entrySet())
+        {
+            try
+            {
+                Double notIndexedFactor = Double.valueOf(e.getValue().toString());
+        
+                if (notIndexedFactor != 0)
+                    traitsChange.put(e.getKey(), notIndexedFactor);
+            }
+            catch (NumberFormatException err)
+            {
+                throw new IllegalArgumentException("Value of " + e.getKey() + " is not a number");
+            }
+        }
     
+        if (traitsChange.size() == 0)
+            throw new IllegalArgumentException("No valid traits found");
     }
 }
