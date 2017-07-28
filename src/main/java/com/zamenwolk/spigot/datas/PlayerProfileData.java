@@ -8,9 +8,7 @@ import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.io.Serializable;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.UUID;
+import java.util.*;
 import java.util.function.Consumer;
 import java.util.function.Supplier;
 
@@ -19,13 +17,26 @@ import java.util.function.Supplier;
  */
 public class PlayerProfileData extends DataModel implements Serializable
 {
-    private UUID   playerID;
-    private String realName;
-    private int    year;
-    private House  house;
-    private String role;
+    private UUID            playerID;
+    private String          realName;
+    private int             year;
+    private House           house;
+    private String          role;
     
-    public PlayerProfileData(UUID playerID, String realName, int year, House house, String role)
+    private QuizTakingState quizState;
+    private List<String>    answersList;
+    private int             quizHash;
+    private int             prelimQuestionsHash;
+    
+    public PlayerProfileData(UUID playerID,
+                             String realName,
+                             int year,
+                             House house,
+                             String role,
+                             QuizTakingState quizState,
+                             List<String> answersList,
+                             int quizHash,
+                             int prelimQuestionsHash)
     {
         super();
         this.playerID = playerID;
@@ -33,11 +44,15 @@ public class PlayerProfileData extends DataModel implements Serializable
         this.year = year;
         this.house = house;
         this.role = role;
+        this.quizState = quizState;
+        this.answersList = answersList;
+        this.quizHash = quizHash;
+        this.prelimQuestionsHash = prelimQuestionsHash;
     }
     
     public PlayerProfileData(UUID playerID, String realName)
     {
-        this(playerID, realName, 0, null, "Nobody");
+        this(playerID, realName, 0, null, "Nobody", QuizTakingState.NOT_TAKING_QUIZ, new LinkedList<>(), 0, 0);
     }
     
     int getYear()
@@ -97,6 +112,56 @@ public class PlayerProfileData extends DataModel implements Serializable
         this.house = house;
     }
     
+    QuizTakingState getQuizState()
+    {
+        return quizState;
+    }
+    
+    void setQuizState(QuizTakingState takingQuiz)
+    {
+        quizState = takingQuiz;
+    }
+    
+    List<String> getAnswersList()
+    {
+        return new LinkedList<>(answersList);
+    }
+    
+    private void setAnswersList(List<String> answersList)
+    {
+        this.answersList = answersList;
+    }
+    
+    void addAnswer(String answer)
+    {
+        answersList.add(answer);
+    }
+    
+    void resetAnswersList()
+    {
+        answersList = new LinkedList<>();
+    }
+    
+    int getQuizHash()
+    {
+        return quizHash;
+    }
+    
+    void setQuizHash(int quizHash)
+    {
+        this.quizHash = quizHash;
+    }
+    
+    int getPrelimQuestionsHash()
+    {
+        return prelimQuestionsHash;
+    }
+    
+    void setPrelimQuestionsHash(int prelimQuestionsHash)
+    {
+        this.prelimQuestionsHash = prelimQuestionsHash;
+    }
+    
     private void writeObject(ObjectOutputStream out) throws IOException
     {
         objectWriter(out);
@@ -147,7 +212,41 @@ public class PlayerProfileData extends DataModel implements Serializable
                                         (Object o) -> {
                                             if (o != null && o instanceof String)
                                                 setRealName((String) o);
+                                            else
+                                                setRealName("");
                                         }));
+        
+        modelIO.put("quizTakingState", Pair.of(this::getQuizState,
+                                               (Object o) -> {
+                                                   if (o != null && o instanceof QuizTakingState)
+                                                       setQuizState((QuizTakingState) o);
+                                                   else
+                                                       setQuizState(QuizTakingState.NOT_TAKING_QUIZ);
+                                               }));
+        
+        modelIO.put("answersList", Pair.of(this::getAnswersList,
+                                           (Object o) -> {
+                                               if (o != null && o instanceof List)
+                                                   setAnswersList((List<String>) o);
+                                               else
+                                                   setAnswersList(new LinkedList<>());
+                                           }));
+        
+        modelIO.put("quizHash", Pair.of(this::getQuizHash,
+                                        (Object o) -> {
+                                            if (o != null)
+                                                setQuizHash((Integer) o);
+                                            else
+                                                setQuizHash(0);
+                                        }));
+        
+        modelIO.put("prelimQuestions", Pair.of(this::getPrelimQuestionsHash,
+                                               (Object o) -> {
+                                                   if (o != null)
+                                                       setPrelimQuestionsHash((Integer) o);
+                                                   else
+                                                       setPrelimQuestionsHash(0);
+                                               }));
         
         return modelIO;
     }
