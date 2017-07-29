@@ -32,15 +32,15 @@ public class ProfileCommand extends TargetCommandExecutor
         {
             profile = new PlayerProfile(target.getUniqueId());
         }
-        catch (IOException | ClassNotFoundException e)
+        catch (IOException e)
         {
             sender.sendMessage(ChatColor.RED.toString() + ChatColor.BOLD.toString() + "This player has no profile." + ChatColor.RESET.toString());
             return true;
         }
-        catch (Exception e2)
+        catch (Exception e)
         {
             sender.sendMessage(ChatColor.RED.toString() + ChatColor.BOLD.toString() + "Unknown error" + ChatColor.RESET.toString());
-            e2.printStackTrace();
+            e.printStackTrace();
             return true;
         }
         
