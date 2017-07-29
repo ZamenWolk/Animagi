@@ -6,6 +6,7 @@ import com.zamenwolk.spigot.datas.House;
 import com.zamenwolk.spigot.datas.PlayerProfile;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
+import org.bukkit.OfflinePlayer;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
@@ -76,10 +77,10 @@ public class PointsCommand implements CommandExecutor
     public boolean giveTakeSubCommand(CommandSender sender, Command command, String label, List<String> args, boolean give)
     {
         PlayerProfile targetProfile;
-        Player target;
-        House targetHouse;
-        int pointsChange;
-        String reason;
+        OfflinePlayer target;
+        House         targetHouse;
+        int           pointsChange;
+        String        reason;
         
         if (args.size() < 3)
         {
@@ -97,12 +98,21 @@ public class PointsCommand implements CommandExecutor
             return false;
         }
         
-        target = Bukkit.getPlayer(args.remove(0));
+        String playerName = args.remove(0);
+        target = Bukkit.getPlayer(playerName);
         
         if (target == null)
         {
-            sender.sendMessage("This player doesn't exist !");
-            return false;
+            target = Bukkit.getOfflinePlayer(playerName);
+            if (target == null)
+            {
+                sender.sendMessage("This player doesn't exist !");
+                return false;
+            }
+            else
+            {
+                sender.sendMessage("Player found but not currently connected ! That can cause unexpected behavior");
+            }
         }
         
         reason = args.stream().reduce("", (String a, String b) -> a + b);
@@ -111,12 +121,18 @@ public class PointsCommand implements CommandExecutor
         {
             targetProfile = new PlayerProfile(target.getUniqueId());
         }
-        catch (IOException | ClassNotFoundException e)
+        catch (IOException e)
         {
             sender.sendMessage("This player has no profile.");
             return true;
         }
-        
+        catch (ClassNotFoundException e)
+        {
+            sender.sendMessage("Unknown error");
+            e.printStackTrace();
+            return true;
+        }
+    
         targetHouse = targetProfile.getHouse();
         
         if (targetHouse == null)
@@ -135,7 +151,7 @@ public class PointsCommand implements CommandExecutor
         return true;
     }
     
-    private String generateBroadcast(House targetHouse, Player cause, int pointChange, boolean positive, String reason)
+    private String generateBroadcast(House targetHouse, OfflinePlayer cause, int pointChange, boolean positive, String reason)
     {
         String res = "";
         
