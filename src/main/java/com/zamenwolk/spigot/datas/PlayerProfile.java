@@ -43,4 +43,15 @@ public class PlayerProfile extends DataManager<PlayerProfileData>
     {
         return data.getHouse();
     }
+    
+    public QuizTakingState getQuizState()
+    {
+        return data.getQuizState();
+    }
+    
+    public void setQuizState(QuizTakingState state)
+    {
+        data.setQuizState(state);
+        saveChanges();
+    }
 }

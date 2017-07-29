@@ -6,6 +6,7 @@
 
 package com.zamenwolk.spigot;
 
+import com.zamenwolk.spigot.commands.EnableQuizCommand;
 import com.zamenwolk.spigot.commands.PointsCommand;
 import com.zamenwolk.spigot.commands.ProfileCommand;
 import com.zamenwolk.spigot.datas.*;
@@ -77,17 +78,17 @@ public class Animagi extends JavaPlugin
     @Override
     public void onDisable()
     {
-        logger.info("Disabling plugin");
+        logger.info("[ANM] Disabling plugin");
         unloadData();
     }
     
     @Override
     public void onEnable()
     {
-        logger.info("Loading plugin");
+        logger.info("[ANM] Loading plugin");
         loadData();
         loadCommands();
-        logger.info("Plugin loaded successfully");
+        logger.info("[ANM] Plugin loaded successfully");
     }
     
     private void unloadData()
@@ -101,6 +102,7 @@ public class Animagi extends JavaPlugin
     {
         getCommand("profile").setExecutor(new ProfileCommand());
         getCommand("points").setExecutor(new PointsCommand());
+        getCommand("enableQuiz").setExecutor(new EnableQuizCommand());
     }
     
     private void loadData()
@@ -120,25 +122,25 @@ public class Animagi extends JavaPlugin
         }
         catch (Exception e)
         {
-            logger.log(Level.SEVERE, "Exception thrown", e);
+            logger.log(Level.SEVERE, "[ANM] Exception thrown", e);
             getPluginLoader().disablePlugin(this);
         }
     }
     
     private void loadQuiz(Configuration quizConf) throws InvocationTargetException
     {
-        logger.info("Loading questions");
+        logger.info("[ANM] Loading questions");
         
         List<?> questionList = quizConf.getList("quiz");
         
         quiz = ConfigExtractor.createList(Question.class, (List<Object>) questionList);
         
-        logger.info("Questions loaded");
+        logger.info("[ANM] Questions loaded");
     }
     
     private void loadSchools(Configuration dataConf) throws IOException, ClassNotFoundException
     {
-        logger.info("Loading schools");
+        logger.info("[ANM] Loading schools");
         
         for (String school : dataConf.getKeys(false))
         {
@@ -148,21 +150,21 @@ public class Animagi extends JavaPlugin
             }
             catch (IOException e)
             {
-                logger.warning("School " + school + " not found and will be created ! Make sure it's normal ! Is it the first time using the plugin here ? Did you change the config ?");
+                logger.warning("[ANM] School " + school + " not found and will be created ! Make sure it's normal ! Is it the first time using the plugin here ? Did you change the config ?");
                 schools.put(school, new School(new SchoolData(school), school));
             }
         }
     
-        logger.info("Schools loaded");
+        logger.info("[ANM] Schools loaded");
     }
     
     private void loadHouses(Configuration dataConf) throws IOException, ClassNotFoundException //TODO finish that
     {
-        logger.info("Loading houses");
+        logger.info("[ANM] Loading houses");
     
         for (String school : dataConf.getKeys(false))
         {
-            logger.info("Loading houses of " + school);
+            logger.info("[ANM] Loading houses of " + school);
             Map<String, Object> currSchoolSec = dataConf.getConfigurationSection(school).getValues(false);
             
             for (Map.Entry<String, Object> houseEntry : currSchoolSec.entrySet())
@@ -175,7 +177,7 @@ public class Animagi extends JavaPlugin
                 }
                 catch (IOException e)
                 {
-                    logger.warning("House " + houseName + " not found and will be created ! Make sure it's normal ! Is it the first time using the plugin here ? Did you change the config ?");
+                    logger.warning("[ANM] House " + houseName + " not found and will be created ! Make sure it's normal ! Is it the first time using the plugin here ? Did you change the config ?");
                     School currSchool = getSchool(school);
                     houses.put(houseName, new House(new HouseData(houseName, currSchool, 0), houseName));
                 }
@@ -184,6 +186,6 @@ public class Animagi extends JavaPlugin
             }
         }
     
-        logger.info("Houses loaded");
+        logger.info("[ANM] Houses loaded");
     }
 }

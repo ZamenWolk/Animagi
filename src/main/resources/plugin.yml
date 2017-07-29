@@ -14,3 +14,7 @@ commands:
   points:
     description: List, add or remove points to houses
     usage: /points list <school> {or} /points <give/take> <point number> <player> <reason>
+
+  enableQuiz:
+    description: Enables a player to take the sorting quiz
+    usage: /enableQuiz <player>
