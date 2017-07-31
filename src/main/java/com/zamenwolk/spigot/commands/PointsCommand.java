@@ -10,9 +10,8 @@ import org.bukkit.OfflinePlayer;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
-import org.bukkit.entity.Player;
 
-import java.io.IOException;
+import java.io.FileNotFoundException;
 import java.util.List;
 
 /**
@@ -115,21 +114,15 @@ public class PointsCommand implements CommandExecutor
             }
         }
         
-        reason = args.stream().reduce("", (String a, String b) -> a + b);
+        reason = args.stream().reduce("", (String a, String b) -> a + " " + b);
         
         try
         {
             targetProfile = new PlayerProfile(target.getUniqueId());
         }
-        catch (IOException e)
+        catch (FileNotFoundException e)
         {
             sender.sendMessage("This player has no profile.");
-            return true;
-        }
-        catch (ClassNotFoundException e)
-        {
-            sender.sendMessage("Unknown error");
-            e.printStackTrace();
             return true;
         }
     
@@ -159,9 +152,8 @@ public class PointsCommand implements CommandExecutor
         res += positive ? " gained " : " lost ";
         res += pointChange;
         res += " points ";
-        res += positive ? " thanks to " : " because of ";
-        res += cause.getName();
-        res += " " + reason;
+        res += positive ? "thanks to " : "because of ";
+        res += cause.getName() + reason;
         
         return res;
     }

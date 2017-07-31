@@ -9,7 +9,7 @@ import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
-import java.io.IOException;
+import java.io.FileNotFoundException;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -32,15 +32,9 @@ public class ProfileCommand extends TargetCommandExecutor
         {
             profile = new PlayerProfile(target.getUniqueId());
         }
-        catch (IOException e)
+        catch (FileNotFoundException e)
         {
             sender.sendMessage(ChatColor.RED.toString() + ChatColor.BOLD.toString() + "This player has no profile." + ChatColor.RESET.toString());
-            return true;
-        }
-        catch (Exception e)
-        {
-            sender.sendMessage(ChatColor.RED.toString() + ChatColor.BOLD.toString() + "Unknown error" + ChatColor.RESET.toString());
-            e.printStackTrace();
             return true;
         }
         

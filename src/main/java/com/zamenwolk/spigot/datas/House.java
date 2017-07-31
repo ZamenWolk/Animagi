@@ -3,10 +3,9 @@ package com.zamenwolk.spigot.datas;
 import com.zamenwolk.spigot.Animagi;
 import com.zamenwolk.spigot.helper.ConfigExtractible;
 import com.zamenwolk.spigot.helper.DataManager;
-import org.bukkit.configuration.ConfigurationSection;
 
 import java.io.File;
-import java.io.IOException;
+import java.io.FileNotFoundException;
 
 /**
  * Created by Martin on 11/07/2017.
@@ -15,14 +14,14 @@ public class House extends DataManager<HouseData> implements ConfigExtractible
 {
     private static final String houseFolder = "houses/";
     
-    public House(String houseFile) throws IOException, ClassNotFoundException
+    public House(String houseFile) throws FileNotFoundException
     {
         super(new File(Animagi.dataFolder(), houseFolder + houseFile));
     }
     
-    public House(HouseData data, String houseFile) throws IOException
+    public House(HouseData data)
     {
-        super(data, new File(Animagi.dataFolder(), houseFolder + houseFile));
+        super(data, new File(Animagi.dataFolder(), houseFolder + data.getName()));
     }
     
     public String getName()

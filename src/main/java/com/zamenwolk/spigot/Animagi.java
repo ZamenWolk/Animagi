@@ -6,9 +6,7 @@
 
 package com.zamenwolk.spigot;
 
-import com.zamenwolk.spigot.commands.EnableQuizCommand;
-import com.zamenwolk.spigot.commands.PointsCommand;
-import com.zamenwolk.spigot.commands.ProfileCommand;
+import com.zamenwolk.spigot.commands.*;
 import com.zamenwolk.spigot.datas.*;
 import com.zamenwolk.spigot.helper.ConfigExtractor;
 import org.bukkit.configuration.Configuration;
@@ -103,6 +101,8 @@ public class Animagi extends JavaPlugin
         getCommand("profile").setExecutor(new ProfileCommand());
         getCommand("points").setExecutor(new PointsCommand());
         getCommand("enableQuiz").setExecutor(new EnableQuizCommand());
+        getCommand("createProfile").setExecutor(new CreateProfileCommand());
+        getCommand("setHouse").setExecutor(new SetHouseCommand());
     }
     
     private void loadData()
@@ -151,7 +151,7 @@ public class Animagi extends JavaPlugin
             catch (IOException e)
             {
                 logger.warning("[ANM] School " + school + " not found and will be created ! Make sure it's normal ! Is it the first time using the plugin here ? Did you change the config ?");
-                schools.put(school, new School(new SchoolData(school), school));
+                schools.put(school, new School(new SchoolData(school)));
             }
         }
     
@@ -179,7 +179,7 @@ public class Animagi extends JavaPlugin
                 {
                     logger.warning("[ANM] House " + houseName + " not found and will be created ! Make sure it's normal ! Is it the first time using the plugin here ? Did you change the config ?");
                     School currSchool = getSchool(school);
-                    houses.put(houseName, new House(new HouseData(houseName, currSchool, 0), houseName));
+                    houses.put(houseName, new House(new HouseData(houseName, currSchool, 0)));
                 }
     
                 ConfigExtractor.setObject(houses.get(houseName), houseConf);

@@ -17,8 +17,8 @@ import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
-import java.io.IOException;
-import java.util.*;
+import java.io.FileNotFoundException;
+import java.util.List;
 
 /**
  * Author: Martin
@@ -34,7 +34,6 @@ public class EnableQuizCommand implements CommandExecutor
         Player target;
         PlayerProfile profile;
         QuizTakingState targetQuizState;
-        
     
         if (arguments.size() == 0)
         {
@@ -54,24 +53,9 @@ public class EnableQuizCommand implements CommandExecutor
         {
             profile = new PlayerProfile(target.getUniqueId());
         }
-        catch (IOException e)
+        catch (FileNotFoundException e)
         {
-            try
-            {
-                profile = new PlayerProfile(new PlayerProfileData(target.getUniqueId(), target.getName()), target.getUniqueId());
-            }
-            catch (IOException e1)
-            {
-                sender.sendMessage("Unknown error");
-                e.printStackTrace();
-                return true;
-            }
-        }
-        catch (ClassNotFoundException e)
-        {
-            sender.sendMessage("Unknown error");
-            e.printStackTrace();
-            return true;
+            profile = new PlayerProfile(new PlayerProfileData(target.getUniqueId(), target.getName()));
         }
         
         if (profile.getHouse() != null)

@@ -4,7 +4,7 @@ import com.zamenwolk.spigot.Animagi;
 import com.zamenwolk.spigot.helper.DataManager;
 
 import java.io.File;
-import java.io.IOException;
+import java.io.FileNotFoundException;
 
 /**
  * Created by Martin on 15/07/2017.
@@ -13,14 +13,14 @@ public class School extends DataManager<SchoolData>
 {
     private static final String schoolFolder = "schools/";
     
-    public School(String schoolFile) throws IOException, ClassNotFoundException
+    public School(String schoolFile) throws FileNotFoundException
     {
         super(new File(Animagi.dataFolder(), schoolFolder + schoolFile));
     }
     
-    public School(SchoolData data, String schoolFile) throws IOException
+    public School(SchoolData data)
     {
-        super(data, new File(Animagi.dataFolder(), schoolFolder + schoolFile));
+        super(data, new File(Animagi.dataFolder(), schoolFolder + data.getName()));
     }
     
     public String getName()

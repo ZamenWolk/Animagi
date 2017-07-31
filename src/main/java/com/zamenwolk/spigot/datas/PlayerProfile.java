@@ -4,7 +4,7 @@ import com.zamenwolk.spigot.Animagi;
 import com.zamenwolk.spigot.helper.DataManager;
 
 import java.io.File;
-import java.io.IOException;
+import java.io.FileNotFoundException;
 import java.util.UUID;
 
 /**
@@ -14,14 +14,14 @@ public class PlayerProfile extends DataManager<PlayerProfileData>
 {
     private static final String profileFolder = "profiles/";
     
-    public PlayerProfile(UUID playerUuid) throws IOException, ClassNotFoundException
+    public PlayerProfile(UUID playerUuid) throws FileNotFoundException
     {
         super(new File(Animagi.dataFolder(), profileFolder + playerUuid.toString()));
     }
     
-    public PlayerProfile(PlayerProfileData data, UUID playerUuid) throws IOException
+    public PlayerProfile(PlayerProfileData data)
     {
-        super(data, new File(Animagi.dataFolder(), profileFolder + playerUuid.toString()));
+        super(data, new File(Animagi.dataFolder(), profileFolder + data.getPlayerID().toString()));
     }
     
     public int getYear()
@@ -42,6 +42,12 @@ public class PlayerProfile extends DataManager<PlayerProfileData>
     public House getHouse()
     {
         return data.getHouse();
+    }
+    
+    public void setHouse(House house)
+    {
+        data.setHouse(house);
+        saveChanges();
     }
     
     public QuizTakingState getQuizState()
