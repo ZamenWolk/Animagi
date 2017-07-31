@@ -18,3 +18,11 @@ commands:
   enableQuiz:
     description: Enables a player to take the sorting quiz
     usage: /enableQuiz <player>
+
+  setHouse:
+    description: Sets a player's house without him having to take the quiz
+    usage: /setHouse <player> <house name>
+
+  createProfile:
+    description: Creates a player's profile in case it is not yet created
+    usage: /createProfile <player>
