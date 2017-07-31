@@ -199,6 +199,8 @@ public class PlayerProfileData extends DataModel implements Serializable
                                              House currHouse = Animagi.getHouse((String) o);
                                              if (currHouse == null)
                                                  throw new IllegalArgumentException("House \"" + o + "\" non-existant");
+                                             
+                                             setHouse(currHouse);
                                          }
                                      }));
         
