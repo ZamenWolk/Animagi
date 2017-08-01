@@ -1,5 +1,7 @@
+import java.text.SimpleDateFormat
+
 group 'com.zamenwolk.spigot'
-version '1.0.0-SNAPSHOT'
+version ''
 
 apply plugin: 'java'
 
@@ -24,4 +26,15 @@ dependencies {
 
 
     testCompile group: 'junit', name: 'junit', version: '4.12'
+}
+
+jar {
+    manifest {
+        attributes(
+                'Implementation-Title': rootProject.name,
+                'Implementation-Version': rootProject.version,
+                'Build-Time-Milli': new Date().getTime(),
+                'Build-Time-String': new SimpleDateFormat("yyyy-MM-dd HH:mm:ss z(Z)").format(new Date())
+        )
+    }
 }

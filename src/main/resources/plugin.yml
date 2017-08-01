@@ -26,3 +26,7 @@ commands:
   createProfile:
     description: Creates a player's profile in case it is not yet created
     usage: /createProfile <player>
+
+  animagi:
+    description: Get plugin version
+    usage: /animagi

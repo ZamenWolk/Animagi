@@ -98,11 +98,14 @@ public class Animagi extends JavaPlugin
     
     private void loadCommands()
     {
+        String pluginName = getDescription().getName().toLowerCase();
+        
         getCommand("profile").setExecutor(new ProfileCommand());
         getCommand("points").setExecutor(new PointsCommand());
         getCommand("enableQuiz").setExecutor(new EnableQuizCommand());
         getCommand("createProfile").setExecutor(new CreateProfileCommand());
         getCommand("setHouse").setExecutor(new SetHouseCommand());
+        getCommand(pluginName).setExecutor(new VersionCommand(pluginName, getDescription().getVersion()));
     }
     
     private void loadData()
