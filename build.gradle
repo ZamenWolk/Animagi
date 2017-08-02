@@ -2,6 +2,7 @@ import java.text.SimpleDateFormat
 
 group 'com.zamenwolk.spigot'
 version ''
+def projVersion = '1.0.0-SNAPSHOT'
 
 apply plugin: 'java'
 
@@ -32,7 +33,7 @@ jar {
     manifest {
         attributes(
                 'Implementation-Title': rootProject.name,
-                'Implementation-Version': rootProject.version,
+                'Implementation-Version': projVersion,
                 'Build-Time-Milli': new Date().getTime(),
                 'Build-Time-String': new SimpleDateFormat("yyyy-MM-dd HH:mm:ss z(Z)").format(new Date())
         )
