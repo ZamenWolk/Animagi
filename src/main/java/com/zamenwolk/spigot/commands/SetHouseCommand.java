@@ -9,6 +9,7 @@ package com.zamenwolk.spigot.commands;
 import com.zamenwolk.spigot.Animagi;
 import com.zamenwolk.spigot.datas.House;
 import com.zamenwolk.spigot.datas.PlayerProfile;
+import com.zamenwolk.spigot.helper.CmdParamUtils;
 import org.bukkit.Bukkit;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
@@ -53,7 +54,7 @@ public class SetHouseCommand implements CommandExecutor
             return true;
         }
         
-        house = Animagi.getHouse(args[1]);
+        house = Animagi.findHouse(CmdParamUtils.fromArg(args[1]));
         
         if (house == null)
         {

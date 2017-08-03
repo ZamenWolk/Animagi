@@ -123,7 +123,7 @@ public class HouseData extends DataModel implements Serializable, ConfigExtracti
                                           (Object o) ->
                                           {
                                               if (o != null && o instanceof String)
-                                                  school = Animagi.getSchool((String) o);
+                                                  school = Animagi.findSchool((String) o);
                                               if (school == null)
                                                   throw new IllegalArgumentException("School \"" + o + "\" non-existant");
                                           }));
@@ -138,6 +138,16 @@ public class HouseData extends DataModel implements Serializable, ConfigExtracti
     }
     
     @Override
+    public String toString()
+    {
+        return "HouseData{" +
+               "name='" + name + '\'' +
+               ", school=" + school +
+               ", points=" + points +
+               '}';
+    }
+    
+    @Override
     public boolean equals(Object o)
     {
         if (this == o) return true;
@@ -147,7 +157,9 @@ public class HouseData extends DataModel implements Serializable, ConfigExtracti
         
         if (points != houseData.points) return false;
         if (name != null ? !name.equals(houseData.name) : houseData.name != null) return false;
-        return school != null ? school.equals(houseData.school) : houseData.school == null;
+        if (school != null ? !school.equals(houseData.school) : houseData.school != null) return false;
+        return cf_traitsFactors != null ? cf_traitsFactors.equals(houseData.cf_traitsFactors) :
+                houseData.cf_traitsFactors == null;
     }
     
     @Override
@@ -155,17 +167,6 @@ public class HouseData extends DataModel implements Serializable, ConfigExtracti
     {
         int result = name != null ? name.hashCode() : 0;
         result = 31 * result + (school != null ? school.hashCode() : 0);
-        result = 31 * result + points;
         return result;
-    }
-    
-    @Override
-    public String toString()
-    {
-        return "HouseData{" +
-               "name='" + name + '\'' +
-               ", school=" + school +
-               ", points=" + points +
-               '}';
     }
 }

@@ -196,7 +196,7 @@ public class PlayerProfileData extends DataModel implements Serializable
                                      (Object o) -> {
                                          if (o != null && o instanceof String)
                                          {
-                                             House currHouse = Animagi.getHouse((String) o);
+                                             House currHouse = Animagi.findHouse((String) o);
                                              if (currHouse == null)
                                                  throw new IllegalArgumentException("House \"" + o + "\" non-existant");
                                              
@@ -251,5 +251,30 @@ public class PlayerProfileData extends DataModel implements Serializable
                                                }));
         
         return modelIO;
+    }
+    
+    @Override
+    public boolean equals(Object o)
+    {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        
+        PlayerProfileData that = (PlayerProfileData) o;
+        
+        if (year != that.year) return false;
+        if (quizHash != that.quizHash) return false;
+        if (prelimQuestionsHash != that.prelimQuestionsHash) return false;
+        if (playerID != null ? !playerID.equals(that.playerID) : that.playerID != null) return false;
+        if (realName != null ? !realName.equals(that.realName) : that.realName != null) return false;
+        if (house != null ? !house.equals(that.house) : that.house != null) return false;
+        if (role != null ? !role.equals(that.role) : that.role != null) return false;
+        if (quizState != that.quizState) return false;
+        return answersList != null ? answersList.equals(that.answersList) : that.answersList == null;
+    }
+    
+    @Override
+    public int hashCode()
+    {
+        return playerID != null ? playerID.hashCode() : 0;
     }
 }

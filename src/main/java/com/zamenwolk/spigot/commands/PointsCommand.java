@@ -4,6 +4,8 @@ import com.google.common.collect.Lists;
 import com.zamenwolk.spigot.Animagi;
 import com.zamenwolk.spigot.datas.House;
 import com.zamenwolk.spigot.datas.PlayerProfile;
+import com.zamenwolk.spigot.datas.School;
+import com.zamenwolk.spigot.helper.CmdParamUtils;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.OfflinePlayer;
@@ -49,21 +51,21 @@ public class PointsCommand implements CommandExecutor
             return false;
         }
         
-        String schoolName = Animagi.checkSchool(args.get(0));
+        School school = Animagi.findSchool(CmdParamUtils.fromArg(args.get(0)));
         
-        if (schoolName == null)
+        if (school == null)
         {
             sender.sendMessage(ChatColor.RED + "This school doesn't exist !" + ChatColor.RESET);
             return false;
         }
         
-        List<House> houses = Animagi.getHousesOfSchool(schoolName);
+        List<House> houses = Animagi.getHousesOfSchool(school);
         
         if (houses.size() == 0)
             sender.sendMessage(ChatColor.YELLOW + "No houses in this school !" + ChatColor.RESET);
         else
         {
-            sender.sendMessage("Points of the houses of school " + ChatColor.AQUA + schoolName + ChatColor.RESET + " : ");
+            sender.sendMessage("Points of the houses of school " + ChatColor.AQUA + school.getName() + ChatColor.RESET + " : ");
     
             houses.forEach((House h) -> {
                 sender.sendMessage(ChatColor.GREEN + h.getName() + ChatColor.RESET + " : " + h.getPoints());

@@ -9,12 +9,14 @@ package com.zamenwolk.spigot;
 import com.zamenwolk.spigot.commands.*;
 import com.zamenwolk.spigot.datas.*;
 import com.zamenwolk.spigot.helper.ConfigExtractor;
+import com.zamenwolk.spigot.helper.IndexFinder;
 import org.bukkit.configuration.Configuration;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.plugin.java.JavaPlugin;
 
 import java.io.File;
+import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.lang.reflect.InvocationTargetException;
 import java.util.HashMap;
@@ -29,48 +31,29 @@ import java.util.stream.Collectors;
  */
 public class Animagi extends JavaPlugin
 {
-    public static final Logger logger = Logger.getLogger(Animagi.class.getName());
-    public static final String dataOrganizationFile = "dataConf.yml";
-    public static final String quizConfigFile = "quizConf.yml";
+    private static final Logger logger               = Logger.getLogger(Animagi.class.getName());
+    private static final String dataOrganizationFile = "dataConf.yml";
+    private static final String quizConfigFile       = "quizConf.yml";
     
     private static List<Question>      quiz;
     private static File                dataFolder;
     private static Map<String, School> schools;
     private static Map<String, House>  houses;
+    private static IndexFinder<String, School> schoolFinder;
+    private static IndexFinder<String, House> houseFinder;
     
     public static File dataFolder()
     {
         return dataFolder;
     }
     
-    public static School getSchool(String schoolName)
-    {
-        return schools.get(schoolName);
-    }
-    
-    public static List<House> getHousesOfSchool(String schoolName)
+    public static List<House> getHousesOfSchool(School school)
     {
         return houses.entrySet()
                      .stream() //Make stream
-                     .filter((Map.Entry<String, House> e) -> e.getValue().getSchool().getName().equalsIgnoreCase(schoolName)) //Filter with house name
+                     .filter((Map.Entry<String, House> e) -> e.getValue().getSchool().equals(school)) //Filter with house name
                      .map(Map.Entry::getValue) //Map to stream of House objects
                      .collect(Collectors.toList()); //Make to list
-    }
-    
-    public static House getHouse(String houseName)
-    {
-        return houses.get(houseName);
-    }
-    
-    public static String checkSchool(String schoolName)
-    {
-        for (Map.Entry<String, School> schoolEntry : schools.entrySet())
-        {
-            if (schoolEntry.getKey().equalsIgnoreCase(schoolName))
-                return schoolEntry.getKey();
-        }
-        
-        return null;
     }
     
     @Override
@@ -89,11 +72,23 @@ public class Animagi extends JavaPlugin
         logger.info("[ANM] Plugin loaded successfully");
     }
     
+    public static School findSchool(String schoolName)
+    {
+        return schoolFinder.find(schoolName);
+    }
+    
+    public static House findHouse(String houseName)
+    {
+        return houseFinder.find(houseName);
+    }
+    
     private void unloadData()
     {
         dataFolder = null;
         schools = null;
+        schoolFinder = null;
         houses = null;
+        houseFinder = null;
     }
     
     private void loadCommands()
@@ -141,7 +136,7 @@ public class Animagi extends JavaPlugin
         logger.info("[ANM] Questions loaded");
     }
     
-    private void loadSchools(Configuration dataConf) throws IOException, ClassNotFoundException
+    private void loadSchools(Configuration dataConf)
     {
         logger.info("[ANM] Loading schools");
         
@@ -151,17 +146,19 @@ public class Animagi extends JavaPlugin
             {
                 schools.put(school, new School(school));
             }
-            catch (IOException e)
+            catch (FileNotFoundException e)
             {
                 logger.warning("[ANM] School " + school + " not found and will be created ! Make sure it's normal ! Is it the first time using the plugin here ? Did you change the config ?");
                 schools.put(school, new School(new SchoolData(school)));
             }
         }
+        
+        schoolFinder = new IndexFinder<>(schools, null);
     
         logger.info("[ANM] Schools loaded");
     }
     
-    private void loadHouses(Configuration dataConf) throws IOException, ClassNotFoundException //TODO finish that
+    private void loadHouses(Configuration dataConf)
     {
         logger.info("[ANM] Loading houses");
     
@@ -178,16 +175,18 @@ public class Animagi extends JavaPlugin
                 {
                     houses.put(houseName, new House(houseName));
                 }
-                catch (IOException e)
+                catch (FileNotFoundException e)
                 {
                     logger.warning("[ANM] House " + houseName + " not found and will be created ! Make sure it's normal ! Is it the first time using the plugin here ? Did you change the config ?");
-                    School currSchool = getSchool(school);
+                    School currSchool = findSchool(school);
                     houses.put(houseName, new House(new HouseData(houseName, currSchool, 0)));
                 }
     
                 ConfigExtractor.setObject(houses.get(houseName), houseConf);
             }
         }
+        
+        houseFinder = new IndexFinder<>(houses, null);
     
         logger.info("[ANM] Houses loaded");
     }
