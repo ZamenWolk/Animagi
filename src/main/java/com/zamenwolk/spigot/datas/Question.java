@@ -55,4 +55,24 @@ public class Question implements ConfigExtractible
         if (responseMap.size() == 0)
             throw new IllegalArgumentException("No answers given for question");
     }
+    
+    @Override
+    public boolean equals(Object o)
+    {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        
+        Question question = (Question) o;
+        
+        if (!questionText.equals(question.questionText)) return false;
+        return responseMap.equals(question.responseMap);
+    }
+    
+    @Override
+    public int hashCode()
+    {
+        int result = questionText.hashCode();
+        result = 31 * result + responseMap.hashCode();
+        return result;
+    }
 }

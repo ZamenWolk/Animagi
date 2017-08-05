@@ -1,8 +1,5 @@
 package com.zamenwolk.spigot.helper;
 
-import org.bukkit.configuration.ConfigurationSection;
-
-import javax.xml.crypto.Data;
 import java.lang.reflect.InvocationTargetException;
 import java.util.*;
 
@@ -40,7 +37,7 @@ public class ConfigExtractor
     public static <Data extends ConfigExtractible> List<Data> createList(Class<Data> dataClass, List<Object> configObject)
     throws InvocationTargetException
     {
-        List<Data> ret = new LinkedList<>();
+        List<Data> ret = new ArrayList<>();
         
         for (Object currObj : configObject)
         {

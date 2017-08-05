@@ -53,4 +53,24 @@ public class Response implements ConfigExtractible
         if (traitsChange.size() == 0)
             throw new IllegalArgumentException("No valid traits found");
     }
+    
+    @Override
+    public boolean equals(Object o)
+    {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        
+        Response response = (Response) o;
+        
+        if (!responseText.equals(response.responseText)) return false;
+        return traitsChange.equals(response.traitsChange);
+    }
+    
+    @Override
+    public int hashCode()
+    {
+        int result = responseText.hashCode();
+        result = 31 * result + traitsChange.hashCode();
+        return result;
+    }
 }
