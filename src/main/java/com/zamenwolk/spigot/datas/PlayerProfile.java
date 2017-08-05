@@ -55,9 +55,58 @@ public class PlayerProfile extends DataManager<PlayerProfileData>
         return data.getQuizState();
     }
     
-    public void setQuizState(QuizTakingState state)
+    public void setQuizToPreliminary(int preliminaryHash)
     {
-        data.setQuizState(state);
+        data.setQuizState(QuizTakingState.PRELIMINARY_QUESTIONS);
+        data.setPrelimQuestionsHash(preliminaryHash);
+        saveChanges();
+    }
+    
+    public void resetQuiz()
+    {
+        data.setQuizState(QuizTakingState.NOT_TAKING_QUIZ);
+        data.setPrelimQuestionsHash(0);
+        data.setQuizHash(0);
+        data.setHouse(null);
+        saveChanges();
+    }
+    
+    public boolean isSorted()
+    {
+        if (data.getHouse() != null)
+        {
+            if (data.getQuizState() != QuizTakingState.QUIZ_TAKEN)
+                data.setQuizState(QuizTakingState.QUIZ_TAKEN);
+            return true;
+        }
+        
+        return false;
+    }
+    
+    public boolean isTakingQuiz()
+    {
+        return (!isSorted() && data.getQuizState() != QuizTakingState.NOT_TAKING_QUIZ);
+    }
+    
+    public int getQuizHash()
+    {
+        return data.getQuizHash();
+    }
+    
+    public void setQuizHash(int hash)
+    {
+        data.setQuizHash(hash);
+        saveChanges();
+    }
+    
+    public int getPrelimQuestionsHash()
+    {
+        return data.getPrelimQuestionsHash();
+    }
+    
+    public void setPrelimQuestionsHash(int hash)
+    {
+        data.setPrelimQuestionsHash(hash);
         saveChanges();
     }
 }

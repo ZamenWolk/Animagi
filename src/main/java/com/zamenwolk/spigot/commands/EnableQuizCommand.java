@@ -7,6 +7,7 @@
 package com.zamenwolk.spigot.commands;
 
 import com.google.common.collect.Lists;
+import com.zamenwolk.spigot.Animagi;
 import com.zamenwolk.spigot.datas.PlayerProfile;
 import com.zamenwolk.spigot.datas.PlayerProfileData;
 import com.zamenwolk.spigot.datas.QuizTakingState;
@@ -74,7 +75,7 @@ public class EnableQuizCommand implements CommandExecutor
         else
         {
             sender.sendMessage("Enabling quiz for this player !");
-            profile.setQuizState(QuizTakingState.PRELIMINARY_QUESTIONS);
+            profile.setQuizToPreliminary(Animagi.getPreliminaryHash());
             notifyPlayer(target, true);
         }
         
