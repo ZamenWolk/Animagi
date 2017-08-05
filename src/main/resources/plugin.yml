@@ -30,3 +30,7 @@ commands:
   animagi:
     description: Get plugin version
     usage: /animagi
+
+  quiz:
+    description: Take quiz or view question
+    usage: /quiz <reponse>

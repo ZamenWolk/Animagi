@@ -35,6 +35,7 @@ public class Animagi extends JavaPlugin
     private static final String dataOrganizationFile = "dataConf.yml";
     private static final String quizConfigFile       = "quizConf.yml";
     
+    private static List<String>        preliminary;
     private static List<Question>      quiz;
     private static File                dataFolder;
     private static Map<String, School> schools;
@@ -54,6 +55,11 @@ public class Animagi extends JavaPlugin
                      .filter((Map.Entry<String, House> e) -> e.getValue().getSchool().equals(school)) //Filter with house name
                      .map(Map.Entry::getValue) //Map to stream of House objects
                      .collect(Collectors.toList()); //Make to list
+    }
+    
+    public static int getPreliminaryHash()
+    {
+        return preliminary.hashCode();
     }
     
     @Override
@@ -132,6 +138,8 @@ public class Animagi extends JavaPlugin
         List<?> questionList = quizConf.getList("quiz");
         
         quiz = ConfigExtractor.createList(Question.class, (List<Object>) questionList);
+        
+        preliminary = quizConf.getStringList("preliminary");
         
         logger.info("[ANM] Questions loaded");
     }
