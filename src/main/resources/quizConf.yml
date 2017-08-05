@@ -44,3 +44,7 @@ quiz:
       traitGain:
         loyalty: 50
         extroversion: 10
+
+preliminary:
+- "What is your first name ?"
+- "What is your last name ?"
