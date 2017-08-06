@@ -4,6 +4,7 @@ import com.google.common.collect.Lists;
 import com.zamenwolk.spigot.Animagi;
 import com.zamenwolk.spigot.datas.House;
 import com.zamenwolk.spigot.datas.PlayerProfile;
+import com.zamenwolk.spigot.datas.ProfileCache;
 import com.zamenwolk.spigot.datas.School;
 import com.zamenwolk.spigot.helper.CmdParamUtils;
 import org.bukkit.Bukkit;
@@ -13,7 +14,6 @@ import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 
-import java.io.FileNotFoundException;
 import java.util.List;
 
 /**
@@ -21,6 +21,13 @@ import java.util.List;
  */
 public class PointsCommand implements CommandExecutor
 {
+    private ProfileCache cache;
+    
+    public PointsCommand()
+    {
+        cache = ProfileCache.getInstance();
+    }
+    
     @Override
     public boolean onCommand(CommandSender sender, Command command, String label, String[] args)
     {
@@ -101,7 +108,6 @@ public class PointsCommand implements CommandExecutor
         
         String playerName = args.remove(0);
         target = Bukkit.getPlayer(playerName);
-        
         if (target == null)
         {
             target = Bukkit.getOfflinePlayer(playerName);
@@ -118,18 +124,14 @@ public class PointsCommand implements CommandExecutor
         
         reason = args.stream().reduce("", (String a, String b) -> a + " " + b);
         
-        try
-        {
-            targetProfile = new PlayerProfile(target.getUniqueId());
-        }
-        catch (FileNotFoundException e)
+        targetProfile = cache.getProfile(target.getUniqueId());
+        if (targetProfile == null)
         {
             sender.sendMessage("This player has no profile.");
             return true;
         }
     
         targetHouse = targetProfile.getHouse();
-        
         if (targetHouse == null)
         {
             sender.sendMessage("This player is not sorted yet.");

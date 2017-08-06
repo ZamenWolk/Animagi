@@ -3,13 +3,13 @@ package com.zamenwolk.spigot.commands;
 import com.google.common.collect.Lists;
 import com.zamenwolk.spigot.datas.House;
 import com.zamenwolk.spigot.datas.PlayerProfile;
+import com.zamenwolk.spigot.datas.ProfileCache;
 import com.zamenwolk.spigot.helper.TargetCommandExecutor;
 import org.bukkit.ChatColor;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
-import java.io.FileNotFoundException;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -18,6 +18,13 @@ import java.util.List;
  */
 public class ProfileCommand extends TargetCommandExecutor
 {
+    private ProfileCache cache;
+    
+    public ProfileCommand()
+    {
+        cache = ProfileCache.getInstance();
+    }
+    
     @Override
     public boolean onCommand(CommandSender sender, Command command, String label, String[] args)
     {
@@ -28,11 +35,8 @@ public class ProfileCommand extends TargetCommandExecutor
         if (target == null)
             return false;
     
-        try
-        {
-            profile = new PlayerProfile(target.getUniqueId());
-        }
-        catch (FileNotFoundException e)
+        profile = cache.getProfile(target.getUniqueId());
+        if (profile == null)
         {
             sender.sendMessage(ChatColor.RED.toString() + ChatColor.BOLD.toString() + "This player has no profile." + ChatColor.RESET.toString());
             return true;

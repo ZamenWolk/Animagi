@@ -10,6 +10,7 @@ import com.google.common.collect.Lists;
 import com.zamenwolk.spigot.Animagi;
 import com.zamenwolk.spigot.datas.PlayerProfile;
 import com.zamenwolk.spigot.datas.PlayerProfileData;
+import com.zamenwolk.spigot.datas.ProfileCache;
 import com.zamenwolk.spigot.datas.QuizTakingState;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
@@ -18,7 +19,6 @@ import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
-import java.io.FileNotFoundException;
 import java.util.List;
 
 /**
@@ -27,6 +27,12 @@ import java.util.List;
  */
 public class EnableQuizCommand implements CommandExecutor
 {
+    private ProfileCache cache;
+    
+    public EnableQuizCommand()
+    {
+        cache = ProfileCache.getInstance();
+    }
     
     @Override
     public boolean onCommand(CommandSender sender, Command command, String label, String[] args)
@@ -50,14 +56,9 @@ public class EnableQuizCommand implements CommandExecutor
             return true;
         }
     
-        try
-        {
-            profile = new PlayerProfile(target.getUniqueId());
-        }
-        catch (FileNotFoundException e)
-        {
-            profile = new PlayerProfile(new PlayerProfileData(target.getUniqueId(), target.getName()));
-        }
+        profile = cache.getProfile(target.getUniqueId());
+        if (profile == null)
+            profile = cache.createProfile(new PlayerProfileData(target.getUniqueId(), target.getDisplayName()));
         
         if (profile.getHouse() != null)
         {

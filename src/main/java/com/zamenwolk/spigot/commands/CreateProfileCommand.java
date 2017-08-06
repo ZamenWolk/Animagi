@@ -6,15 +6,13 @@
 
 package com.zamenwolk.spigot.commands;
 
-import com.zamenwolk.spigot.datas.PlayerProfile;
 import com.zamenwolk.spigot.datas.PlayerProfileData;
+import com.zamenwolk.spigot.datas.ProfileCache;
 import org.bukkit.Bukkit;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
-
-import java.io.FileNotFoundException;
 
 /**
  * Author: Martin
@@ -22,6 +20,13 @@ import java.io.FileNotFoundException;
  */
 public class CreateProfileCommand implements CommandExecutor
 {
+    private ProfileCache cache;
+    
+    public CreateProfileCommand()
+    {
+        cache = ProfileCache.getInstance();
+    }
+    
     @Override
     public boolean onCommand(CommandSender sender, Command command, String label, String[] args)
     {
@@ -39,19 +44,14 @@ public class CreateProfileCommand implements CommandExecutor
             return true;
         }
         
-        try
-        {
-            new PlayerProfile(target.getUniqueId());
-            
-            //Error : profile exists already !
+        if (cache.getProfile(target.getUniqueId()) != null)
             sender.sendMessage("This player already has a profile !");
-            return true;
-        }
-        catch (FileNotFoundException e)
+        else
         {
-            sender.sendMessage("Creating this player's profile !");
-            new PlayerProfile(new PlayerProfileData(target.getUniqueId(), target.getDisplayName()));
-            return true;
+            sender.sendMessage("Creating the player profile !");
+            cache.createProfile(new PlayerProfileData(target.getUniqueId(), target.getDisplayName()));
         }
+        
+        return true;
     }
 }

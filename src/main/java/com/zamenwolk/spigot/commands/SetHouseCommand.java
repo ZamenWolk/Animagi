@@ -9,6 +9,7 @@ package com.zamenwolk.spigot.commands;
 import com.zamenwolk.spigot.Animagi;
 import com.zamenwolk.spigot.datas.House;
 import com.zamenwolk.spigot.datas.PlayerProfile;
+import com.zamenwolk.spigot.datas.ProfileCache;
 import com.zamenwolk.spigot.helper.CmdParamUtils;
 import org.bukkit.Bukkit;
 import org.bukkit.command.Command;
@@ -16,14 +17,19 @@ import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
-import java.io.FileNotFoundException;
-
 /**
  * Author: Martin
  * created on 31/07/2017.
  */
 public class SetHouseCommand implements CommandExecutor
 {
+    private ProfileCache cache;
+    
+    public SetHouseCommand()
+    {
+        cache = ProfileCache.getInstance();
+    }
+    
     @Override
     public boolean onCommand(CommandSender sender, Command command, String label, String[] args)
     {
@@ -44,11 +50,8 @@ public class SetHouseCommand implements CommandExecutor
             return true;
         }
     
-        try
-        {
-            profile = new PlayerProfile(target.getUniqueId());
-        }
-        catch (FileNotFoundException e)
+        profile = cache.getProfile(target.getUniqueId());
+        if (profile == null)
         {
             sender.sendMessage("This player has no profile yet !");
             return true;

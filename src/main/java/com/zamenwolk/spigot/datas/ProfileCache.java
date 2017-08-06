@@ -12,6 +12,7 @@
 
 package com.zamenwolk.spigot.datas;
 
+import java.io.FileNotFoundException;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.UUID;
@@ -38,13 +39,27 @@ public class ProfileCache
     
     public PlayerProfile getProfile(UUID playerID)
     {
-        return profileMap.getOrDefault(playerID, null);
+        PlayerProfile profile = profileMap.getOrDefault(playerID, null);
+        
+        if (profile != null)
+            return profile;
+    
+        try
+        {
+            profile = new PlayerProfile(playerID);
+            profileMap.put(playerID, profile);
+            return profile;
+        }
+        catch (FileNotFoundException e)
+        {
+            return null;
+        }
     }
     
     public PlayerProfile createProfile(PlayerProfileData data)
     {
         if (profileMap.get(data.getPlayerID()) != null)
-            throw new IllegalArgumentException("This player already exists");
+            return profileMap.get(data.getPlayerID());
     
         PlayerProfile profile = new PlayerProfile(data);
         profileMap.put(profile.getPlayerID(), profile);
