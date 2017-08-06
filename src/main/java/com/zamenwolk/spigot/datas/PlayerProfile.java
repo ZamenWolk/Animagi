@@ -109,4 +109,12 @@ public class PlayerProfile extends DataManager<PlayerProfileData>
         data.setPrelimQuestionsHash(hash);
         saveChanges();
     }
+    
+    @Override
+    public String toString()
+    {
+        return "PlayerProfile{" +
+               "data=" + data +
+               '}';
+    }
 }

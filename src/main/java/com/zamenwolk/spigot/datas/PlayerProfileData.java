@@ -285,4 +285,13 @@ public class PlayerProfileData extends DataModel implements Serializable
     {
         return playerID != null ? playerID.hashCode() : 0;
     }
+    
+    @Override
+    public String toString()
+    {
+        return "PlayerProfileData{" +
+               "playerID=" + playerID +
+               ", realName='" + realName + '\'' +
+               '}';
+    }
 }
