@@ -1,3 +1,9 @@
+/*
+ * This Source Code Form is subject to the terms of the Mozilla Public
+ * License, v. 2.0. If a copy of the MPL was not distributed with this
+ * file, You can obtain one at http://mozilla.org/MPL/2.0/.
+ */
+
 package com.zamenwolk.spigot.datas;
 
 import com.zamenwolk.spigot.Animagi;
@@ -20,6 +26,8 @@ import java.util.function.Supplier;
  */
 public class HouseData extends DataModel implements Serializable, ConfigExtractible
 {
+    private static final long serialVersionUID = 8260655285918364331L;
+    
     private String name;
     private School school;
     private int    points;

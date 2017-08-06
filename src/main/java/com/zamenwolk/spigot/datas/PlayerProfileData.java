@@ -1,3 +1,9 @@
+/*
+ * This Source Code Form is subject to the terms of the Mozilla Public
+ * License, v. 2.0. If a copy of the MPL was not distributed with this
+ * file, You can obtain one at http://mozilla.org/MPL/2.0/.
+ */
+
 package com.zamenwolk.spigot.datas;
 
 import com.zamenwolk.spigot.Animagi;
@@ -17,6 +23,8 @@ import java.util.function.Supplier;
  */
 public class PlayerProfileData extends DataModel implements Serializable
 {
+    private static final long serialVersionUID = 7137425549750149760L;
+    
     private UUID            playerID;
     private String          realName;
     private int             year;
