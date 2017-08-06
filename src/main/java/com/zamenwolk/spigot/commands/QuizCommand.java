@@ -51,7 +51,7 @@ public class QuizCommand implements CommandExecutor
         return false;
     }
     
-    boolean handleChange(PlayerProfile profile)
+    private boolean handleChange(PlayerProfile profile)
     {
         QuizTakingState quizState = profile.getQuizState();
         
@@ -68,7 +68,7 @@ public class QuizCommand implements CommandExecutor
         return false;
     }
     
-    void resetQuiz(PlayerProfile profile)
+    private void resetQuiz(PlayerProfile profile)
     {
         //TODO this
     }

@@ -33,4 +33,4 @@ commands:
 
   quiz:
     description: Take quiz or view question
-    usage: /quiz <reponse>
+    usage: /quiz (reponse)
