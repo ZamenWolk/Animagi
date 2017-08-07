@@ -5,6 +5,7 @@ import com.zamenwolk.spigot.helper.DataManager;
 
 import java.io.File;
 import java.io.FileNotFoundException;
+import java.util.List;
 import java.util.UUID;
 
 /**
@@ -59,6 +60,25 @@ public class PlayerProfile extends DataManager<PlayerProfileData>
     {
         data.setQuizState(QuizTakingState.PRELIMINARY_QUESTIONS);
         data.setPrelimQuestionsHash(preliminaryHash);
+        
+        saveChanges();
+    }
+    
+    public void setQuizToMain(int quizHash)
+    {
+        data.setQuizState(QuizTakingState.TAKING_QUIZ);
+        data.setQuizHash(quizHash);
+    
+        if (data.getAnswersList().size() != 0)
+            data.resetAnswersList();
+    
+        saveChanges();
+    }
+    
+    public void setQuizToHousePicking()
+    {
+        data.setQuizState(QuizTakingState.SCHOOL_PICKING);
+        
         saveChanges();
     }
     
@@ -93,21 +113,19 @@ public class PlayerProfile extends DataManager<PlayerProfileData>
         return data.getQuizHash();
     }
     
-    public void setQuizHash(int hash)
-    {
-        data.setQuizHash(hash);
-        saveChanges();
-    }
-    
     public int getPrelimQuestionsHash()
     {
         return data.getPrelimQuestionsHash();
     }
     
-    public void setPrelimQuestionsHash(int hash)
+    public List<String> getAnswersList()
     {
-        data.setPrelimQuestionsHash(hash);
-        saveChanges();
+        return data.getAnswersList();
+    }
+    
+    public void addAnswer(String answer)
+    {
+        data.addAnswer(answer);
     }
     
     @Override

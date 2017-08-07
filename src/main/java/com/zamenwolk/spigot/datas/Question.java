@@ -29,6 +29,14 @@ public class Question implements ConfigExtractible
         responseMap = new HashMap<>();
     }
     
+    public boolean isAnswerValid(String answer)
+    {
+        return responseMap
+                .entrySet()
+                .parallelStream()
+                .anyMatch((Map.Entry<String, Response> e) -> e.getKey().equalsIgnoreCase(answer));
+    }
+    
     @Override
     public void getFromConfig(Object config)
     {

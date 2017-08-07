@@ -76,7 +76,7 @@ public class EnableQuizCommand implements CommandExecutor
         else
         {
             sender.sendMessage("Enabling quiz for this player !");
-            profile.setQuizToPreliminary(Animagi.getPreliminaryHash());
+            profile.setQuizToPreliminary(QuizCommand.getPrelimQuizHash());
             notifyPlayer(target, true);
         }
         
