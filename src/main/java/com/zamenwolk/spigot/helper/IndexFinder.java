@@ -25,11 +25,11 @@ public class IndexFinder <Key, Data>
         this.aliases = aliases != null ? aliases : new HashMap<>();
     }
     
-    public Data find(Key key)
+    public Data find(Key key, boolean allowAliases)
     {
         Data res = findInternal(key);
         
-        if (res != null)
+        if (res != null || !allowAliases)
             return res;
     
         if (aliases.get(key) != null)

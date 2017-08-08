@@ -17,7 +17,6 @@ import org.bukkit.plugin.java.JavaPlugin;
 
 import java.io.File;
 import java.io.FileNotFoundException;
-import java.io.IOException;
 import java.lang.reflect.InvocationTargetException;
 import java.util.HashMap;
 import java.util.List;
@@ -74,12 +73,17 @@ public class Animagi extends JavaPlugin
     
     public static School findSchool(String schoolName)
     {
-        return schoolFinder.find(schoolName);
+        return findSchool(schoolName, true);
+    }
+    
+    public static School findSchool(String schoolName, boolean allowAliases)
+    {
+        return schoolFinder.find(schoolName, allowAliases);
     }
     
     public static House findHouse(String houseName)
     {
-        return houseFinder.find(houseName);
+        return houseFinder.find(houseName, true);
     }
     
     private void unloadData()
