@@ -6,6 +6,7 @@ import com.zamenwolk.spigot.helper.DataManager;
 
 import java.io.File;
 import java.io.FileNotFoundException;
+import java.util.Map;
 
 /**
  * Created by Martin on 11/07/2017.
@@ -47,6 +48,11 @@ public class House extends DataManager<HouseData> implements ConfigExtractible
             data.setPoints(points);
             saveChanges();
         }
+    }
+    
+    public Map<String, Double> getTraitsFactor()
+    {
+        return data.getTraitsFactors();
     }
     
     @Override

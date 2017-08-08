@@ -72,6 +72,11 @@ public class HouseData extends DataModel implements Serializable, ConfigExtracti
         this.points = points;
     }
     
+    Map<String, Double> getTraitsFactors()
+    {
+        return new HashMap<>(cf_traitsFactors);
+    }
+    
     private void writeObject(ObjectOutputStream out) throws IOException
     {
         objectWriter(out);

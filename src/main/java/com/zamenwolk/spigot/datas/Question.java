@@ -8,7 +8,6 @@ package com.zamenwolk.spigot.datas;
 
 import com.zamenwolk.spigot.helper.ConfigExtractible;
 import com.zamenwolk.spigot.helper.ConfigExtractor;
-import org.bukkit.configuration.ConfigurationSection;
 
 import java.lang.reflect.InvocationTargetException;
 import java.util.HashMap;
@@ -35,6 +34,17 @@ public class Question implements ConfigExtractible
                 .entrySet()
                 .parallelStream()
                 .anyMatch((Map.Entry<String, Response> e) -> e.getKey().equalsIgnoreCase(answer));
+    }
+    
+    public Response getAnswer(String answer)
+    {
+        for (Map.Entry<String, Response> e : responseMap.entrySet())
+        {
+            if (e.getKey().equalsIgnoreCase(answer))
+                return e.getValue();
+        }
+        
+        return null;
     }
     
     @Override

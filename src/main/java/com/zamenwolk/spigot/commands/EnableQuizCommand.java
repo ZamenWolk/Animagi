@@ -7,11 +7,11 @@
 package com.zamenwolk.spigot.commands;
 
 import com.google.common.collect.Lists;
-import com.zamenwolk.spigot.Animagi;
 import com.zamenwolk.spigot.datas.PlayerProfile;
 import com.zamenwolk.spigot.datas.PlayerProfileData;
 import com.zamenwolk.spigot.datas.ProfileCache;
 import com.zamenwolk.spigot.datas.QuizTakingState;
+import com.zamenwolk.spigot.helper.CmdParamUtils;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.command.Command;
@@ -48,7 +48,7 @@ public class EnableQuizCommand implements CommandExecutor
             return false;
         }
         
-        target = Bukkit.getPlayer(arguments.remove(0));
+        target = Bukkit.getPlayer(CmdParamUtils.fromArg(arguments.remove(0)));
         
         if (target == null)
         {

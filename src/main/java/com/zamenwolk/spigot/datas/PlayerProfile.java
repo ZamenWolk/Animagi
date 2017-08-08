@@ -25,6 +25,18 @@ public class PlayerProfile extends DataManager<PlayerProfileData>
         super(data, new File(Animagi.dataFolder(), profileFolder + data.getPlayerID().toString()));
     }
     
+    public String getRealName()
+    {
+        return data.getRealName();
+    }
+    
+    public void setRealName(String realName)
+    {
+        data.setRealName(realName);
+        
+        saveChanges();
+    }
+    
     public int getYear()
     {
         return data.getYear();
@@ -78,6 +90,13 @@ public class PlayerProfile extends DataManager<PlayerProfileData>
     public void setQuizToHousePicking()
     {
         data.setQuizState(QuizTakingState.SCHOOL_PICKING);
+        
+        saveChanges();
+    }
+    
+    public void setQuizToTaken()
+    {
+        data.setQuizState(QuizTakingState.QUIZ_TAKEN);
         
         saveChanges();
     }

@@ -35,4 +35,21 @@ public class School extends DataManager<SchoolData>
                "data=" + data +
                '}';
     }
+    
+    @Override
+    public boolean equals(Object o)
+    {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        
+        School school = (School) o;
+        
+        return data.equals(school.data);
+    }
+    
+    @Override
+    public int hashCode()
+    {
+        return data.hashCode();
+    }
 }

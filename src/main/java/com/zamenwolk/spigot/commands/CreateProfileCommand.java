@@ -8,6 +8,7 @@ package com.zamenwolk.spigot.commands;
 
 import com.zamenwolk.spigot.datas.PlayerProfileData;
 import com.zamenwolk.spigot.datas.ProfileCache;
+import com.zamenwolk.spigot.helper.CmdParamUtils;
 import org.bukkit.Bukkit;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
@@ -36,7 +37,7 @@ public class CreateProfileCommand implements CommandExecutor
             return false;
         }
     
-        Player target = Bukkit.getPlayer(args[0]);
+        Player target = Bukkit.getPlayer(CmdParamUtils.fromArg(args[0]));
     
         if (target == null)
         {

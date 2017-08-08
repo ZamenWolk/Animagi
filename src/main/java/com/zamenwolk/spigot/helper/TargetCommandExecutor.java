@@ -16,7 +16,7 @@ public abstract class TargetCommandExecutor implements CommandExecutor
     {
         if (arguments.size() >= 1)
         {
-            Player player = Bukkit.getPlayer(arguments.get(0));
+            Player player = Bukkit.getPlayer(CmdParamUtils.fromArg(arguments.get(0)));
             if (player != null)
             {
                 arguments.remove(0);

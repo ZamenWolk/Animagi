@@ -106,7 +106,7 @@ public class PointsCommand implements CommandExecutor
             return false;
         }
         
-        String playerName = args.remove(0);
+        String playerName = CmdParamUtils.fromArg(args.remove(0));
         target = Bukkit.getPlayer(playerName);
         if (target == null)
         {

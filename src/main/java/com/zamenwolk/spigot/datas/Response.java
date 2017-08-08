@@ -7,7 +7,6 @@
 package com.zamenwolk.spigot.datas;
 
 import com.zamenwolk.spigot.helper.ConfigExtractible;
-import org.bukkit.configuration.ConfigurationSection;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -72,5 +71,10 @@ public class Response implements ConfigExtractible
         int result = responseText.hashCode();
         result = 31 * result + traitsChange.hashCode();
         return result;
+    }
+    
+    public Map<String, Double> getTraitsChange()
+    {
+        return traitsChange;
     }
 }
