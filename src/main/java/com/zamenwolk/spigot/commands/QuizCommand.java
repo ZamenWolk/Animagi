@@ -10,6 +10,7 @@ import com.zamenwolk.spigot.Animagi;
 import com.zamenwolk.spigot.datas.*;
 import com.zamenwolk.spigot.helper.CmdParamUtils;
 import org.bukkit.Bukkit;
+import org.bukkit.ChatColor;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
@@ -31,9 +32,9 @@ public class QuizCommand implements CommandExecutor
         preliminary.add("What is your last name ?");
     }
     
-    public static int getPrelimQuizHash()
+    public static List<String> getPrelimQuiz()
     {
-        return preliminary.hashCode();
+        return new ArrayList<>(preliminary);
     }
     
     private List<Question> quiz;
@@ -49,7 +50,7 @@ public class QuizCommand implements CommandExecutor
     }
     
     @Override
-    public boolean onCommand(CommandSender sender, Command command, String label, String[] args) //TODO implement jump if
+    public boolean onCommand(CommandSender sender, Command command, String label, String[] args)
     {
         if (!(sender instanceof Player))
         {
@@ -79,14 +80,15 @@ public class QuizCommand implements CommandExecutor
             switch (quizState)
             {
             case PRELIMINARY_QUESTIONS:
-                List<String> playerPrelimAns = prelimAns.putIfAbsent(profile.getPlayerID(), new LinkedList<>());
+                prelimAns.putIfAbsent(profile.getPlayerID(), new LinkedList<>());
+                List<String> playerPrelimAns = prelimAns.get(profile.getPlayerID());
                 String       answer          = String.join(" ", args);
         
                 playerPrelimAns.add(answer);
                 if (playerPrelimAns.size() == preliminary.size())
                 {
                     onEndOfPreliminary(profile);
-                    profile.setQuizToMain(quiz.hashCode());
+                    profile.advanceQuiz(preliminary, quiz);
                 }
                 break;
                 
@@ -102,7 +104,7 @@ public class QuizCommand implements CommandExecutor
                 profile.addAnswer(quizAnswer);
                 if (profile.getAnswersList().size() == quiz.size())
                 {
-                    profile.setQuizToHousePicking();
+                    profile.advanceQuiz(preliminary, quiz);
                 }
                 break;
                 
@@ -117,17 +119,60 @@ public class QuizCommand implements CommandExecutor
                 
                 House sortedHouse = sort(profile, schoolToSort);
                 
-                //TODO assign house to player
-                //TODO announce to player his sorting
+                profile.setHouse(sortedHouse);
+                Bukkit.getServer().broadcastMessage(ChatColor.AQUA + target.getDisplayName() +
+                                                              " has been sorted to " +
+                                                              sortedHouse.getName() +
+                                                              " ! Welcome !" + ChatColor.RESET);
                 //TODO put here any additional
-                
-                profile.setQuizToTaken();
+    
+                profile.advanceQuiz(preliminary, quiz);
                 break;
             }
         }
+    
+        //Display current question
+        //TODO Display current question
+        quizState = profile.getQuizState();
         
-        displayCurrentQuestion(target);
+        switch (quizState)
+        {
+        case PRELIMINARY_QUESTIONS:
+            printQuestion(target, new String[]{preliminary.get(prelimAns.getOrDefault(target.getUniqueId(), new LinkedList<>()).size())});
+            break;
+            
+        case TAKING_QUIZ:
+            printQuestion(target, questionToString(quiz.get(profile.getAnswersList().size())));
+            break;
+            
+        case SCHOOL_PICKING:
+            List<String> schoolPick = new ArrayList<>();
+            schoolPick.add("Now is the time to pick your school ? Where do you want to go ?");
+            schoolPick.addAll(Animagi.getSchoolNames());
+            printQuestion(target, schoolPick.toArray(new String[]{}));
+            break;
+        }
+        
         return true;
+    }
+    
+    private String[] questionToString(Question question)
+    {
+        List<String> str = new ArrayList<>();
+        
+        str.add(question.getQuestionText());
+        
+        for (Map.Entry<String, Answer> a : question.getAnswerMap().entrySet())
+        {
+            str.add(a.getKey() + ": " + a.getValue().getResponseText());
+        }
+        
+        return str.toArray(new String[]{});
+    }
+    
+    private void printQuestion(Player target, String[] s)
+    {
+        target.sendMessage(s);
     }
     
     private boolean handleChange(PlayerProfile profile)
@@ -153,14 +198,9 @@ public class QuizCommand implements CommandExecutor
         
         target.sendMessage("The quiz has changed after you started answering it ! Your answers have been deleted. Please start over. Sorry for the inconvenience.");
         
-        profile.setQuizToPreliminary(preliminary.hashCode());
+        profile.unsetQuiz();
+        profile.advanceQuiz(preliminary, quiz);
         prelimAns.remove(profile.getPlayerID());
-    }
-    
-    private void displayCurrentQuestion(Player target)
-    {
-        //TODO this
-        //Careful, quiz might be ended by the time this is reached
     }
     
     private void onEndOfPreliminary(PlayerProfile profile) //TODO check this is correct, probably buggy
@@ -189,7 +229,7 @@ public class QuizCommand implements CommandExecutor
             
             Map<String, Double> currResp = currQuest.getAnswer(currAns).getTraitsChange();
             
-            currResp.forEach((String s, Double d) ->
+            currResp.forEach((s, d) ->
             {
                 Double curr = playerTraits.getOrDefault(s, 0d);
                 curr += d;

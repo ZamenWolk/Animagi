@@ -15,15 +15,25 @@ import java.util.Map;
  * Author: Martin
  * created on 26/07/2017.
  */
-public class Response implements ConfigExtractible
+public class Answer implements ConfigExtractible
 {
     private String responseText;
     private Map<String, Double> traitsChange;
     
-    public Response()
+    public Answer()
     {
         responseText = "";
         traitsChange = new HashMap<>();
+    }
+    
+    public String getResponseText()
+    {
+        return responseText;
+    }
+    
+    public Map<String, Double> getTraitsChange()
+    {
+        return traitsChange;
     }
     
     @Override
@@ -59,10 +69,10 @@ public class Response implements ConfigExtractible
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         
-        Response response = (Response) o;
+        Answer answer = (Answer) o;
         
-        if (!responseText.equals(response.responseText)) return false;
-        return traitsChange.equals(response.traitsChange);
+        if (!responseText.equals(answer.responseText)) return false;
+        return traitsChange.equals(answer.traitsChange);
     }
     
     @Override
@@ -71,10 +81,5 @@ public class Response implements ConfigExtractible
         int result = responseText.hashCode();
         result = 31 * result + traitsChange.hashCode();
         return result;
-    }
-    
-    public Map<String, Double> getTraitsChange()
-    {
-        return traitsChange;
     }
 }

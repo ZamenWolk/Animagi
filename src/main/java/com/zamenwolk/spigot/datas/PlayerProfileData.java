@@ -186,14 +186,14 @@ public class PlayerProfileData extends DataModel implements Serializable
         Map<String, Pair<Supplier<Object>, Consumer<Object>>> modelIO = new HashMap<>();
         
         modelIO.put("playerID", Pair.of(this::getPlayerID,
-                                        (Object o) ->
+                                        o ->
                                         {
                                             if (o != null && o instanceof UUID)
                                                 setPlayerID((UUID) o);
                                         }));
         
         modelIO.put("year", Pair.of(this::getYear,
-                                    (Object o) -> {
+                                    o -> {
                                         if (o != null)
                                         {
                                             setYear((Integer) o);
@@ -201,7 +201,7 @@ public class PlayerProfileData extends DataModel implements Serializable
                                     }));
         
         modelIO.put("house", Pair.of(() -> house != null ? house.getName() : null,
-                                     (Object o) -> {
+                                     o -> {
                                          if (o != null && o instanceof String)
                                          {
                                              House currHouse = Animagi.findHouse((String) o);
@@ -213,13 +213,13 @@ public class PlayerProfileData extends DataModel implements Serializable
                                      }));
         
         modelIO.put("role", Pair.of(this::getRole,
-                                    (Object o) -> {
+                                    o -> {
                                         if (o != null && o instanceof String)
                                             setRole((String) o);
                                     }));
         
         modelIO.put("realName", Pair.of(this::getRealName,
-                                        (Object o) -> {
+                                        o -> {
                                             if (o != null && o instanceof String)
                                                 setRealName((String) o);
                                             else
@@ -227,7 +227,7 @@ public class PlayerProfileData extends DataModel implements Serializable
                                         }));
         
         modelIO.put("quizTakingState", Pair.of(this::getQuizState,
-                                               (Object o) -> {
+                                               o -> {
                                                    if (o != null && o instanceof QuizTakingState)
                                                        setQuizState((QuizTakingState) o);
                                                    else
@@ -235,7 +235,7 @@ public class PlayerProfileData extends DataModel implements Serializable
                                                }));
         
         modelIO.put("answersList", Pair.of(this::getAnswersList,
-                                           (Object o) -> {
+                                           o -> {
                                                if (o != null && o instanceof List)
                                                    setAnswersList((List<String>) o);
                                                else
@@ -243,7 +243,7 @@ public class PlayerProfileData extends DataModel implements Serializable
                                            }));
         
         modelIO.put("quizHash", Pair.of(this::getQuizHash,
-                                        (Object o) -> {
+                                        o -> {
                                             if (o != null)
                                                 setQuizHash((Integer) o);
                                             else
@@ -251,7 +251,7 @@ public class PlayerProfileData extends DataModel implements Serializable
                                         }));
         
         modelIO.put("prelimQuestions", Pair.of(this::getPrelimQuestionsHash,
-                                               (Object o) -> {
+                                               o -> {
                                                    if (o != null)
                                                        setPrelimQuestionsHash((Integer) o);
                                                    else

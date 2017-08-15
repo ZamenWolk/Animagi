@@ -74,9 +74,7 @@ public class PointsCommand implements CommandExecutor
         {
             sender.sendMessage("Points of the houses of school " + ChatColor.AQUA + school.getName() + ChatColor.RESET + " : ");
     
-            houses.forEach((House h) -> {
-                sender.sendMessage(ChatColor.GREEN + h.getName() + ChatColor.RESET + " : " + h.getPoints());
-            });
+            houses.forEach(h -> sender.sendMessage(ChatColor.GREEN + h.getName() + ChatColor.RESET + " : " + h.getPoints()));
         }
         
         return true;
@@ -122,7 +120,7 @@ public class PointsCommand implements CommandExecutor
             }
         }
         
-        reason = args.stream().reduce("", (String a, String b) -> a + " " + b);
+        reason = args.stream().reduce("", (a, b) -> a + " " + b);
         
         targetProfile = cache.getProfile(target.getUniqueId());
         if (targetProfile == null)

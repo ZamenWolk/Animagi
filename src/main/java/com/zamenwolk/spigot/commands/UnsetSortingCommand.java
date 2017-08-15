@@ -7,11 +7,8 @@
 package com.zamenwolk.spigot.commands;
 
 import com.google.common.collect.Lists;
-import com.zamenwolk.spigot.Animagi;
 import com.zamenwolk.spigot.datas.PlayerProfile;
-import com.zamenwolk.spigot.datas.PlayerProfileData;
 import com.zamenwolk.spigot.datas.ProfileCache;
-import com.zamenwolk.spigot.datas.QuizTakingState;
 import com.zamenwolk.spigot.helper.CmdParamUtils;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
@@ -24,13 +21,13 @@ import java.util.List;
 
 /**
  * Author: Martin
- * created on 29/07/2017.
+ * created on 15/08/2017.
  */
-public class EnableQuizCommand implements CommandExecutor
+public class UnsetSortingCommand implements CommandExecutor
 {
     private ProfileCache cache;
     
-    public EnableQuizCommand()
+    public UnsetSortingCommand()
     {
         cache = ProfileCache.getInstance();
     }
@@ -38,11 +35,10 @@ public class EnableQuizCommand implements CommandExecutor
     @Override
     public boolean onCommand(CommandSender sender, Command command, String label, String[] args)
     {
-        List<String> arguments = Lists.newArrayList(args);
-        Player target;
-        PlayerProfile profile;
-        QuizTakingState targetQuizState;
-    
+        List<String>    arguments = Lists.newArrayList(args);
+        Player          target;
+        PlayerProfile   profile;
+        
         if (arguments.size() == 0)
         {
             sender.sendMessage(ChatColor.RED + "No parameter given !" + ChatColor.RESET);
@@ -56,30 +52,18 @@ public class EnableQuizCommand implements CommandExecutor
             sender.sendMessage(ChatColor.RED + "This player doesn't exist or is not online." + ChatColor.RESET);
             return true;
         }
-    
-        profile = cache.getProfile(target.getUniqueId());
-        if (profile == null)
-            profile = cache.createProfile(new PlayerProfileData(target.getUniqueId(), target.getDisplayName()));
         
-        if (profile.getHouse() != null)
+        profile = cache.getProfile(target.getUniqueId());
+        
+        if (profile == null)
         {
-            sender.sendMessage("This player is already in a house !");
+            sender.sendMessage("THis person doesn't have a profile yet");
             return true;
         }
         
-        targetQuizState = profile.getQuizState();
-        
-        if (targetQuizState != QuizTakingState.NOT_TAKING_QUIZ)
-        {
-            sender.sendMessage("This player is already taking the test !");
-            notifyPlayer(target, false);
-        }
-        else
-        {
-            sender.sendMessage("Enabling quiz for this player !");
-            profile.advanceQuiz(QuizCommand.getPrelimQuiz(), Animagi.getQuiz());
-            notifyPlayer(target, true);
-        }
+        profile.unsetQuiz();
+        sender.sendMessage("Quiz deactivated !");
+        target.sendMessage("Your quiz and sorting have been reset by " + sender.getName());
         
         return true;
     }

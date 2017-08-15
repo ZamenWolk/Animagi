@@ -68,40 +68,38 @@ public class PlayerProfile extends DataManager<PlayerProfileData>
         return data.getQuizState();
     }
     
-    public void setQuizToPreliminary(int preliminaryHash)
+    public void advanceQuiz(List<String> prelimQuiz, List<Question> quiz)
     {
-        data.setQuizState(QuizTakingState.PRELIMINARY_QUESTIONS);
-        data.setPrelimQuestionsHash(preliminaryHash);
+        QuizTakingState currState = getQuizState();
         
-        saveChanges();
-    }
-    
-    public void setQuizToMain(int quizHash)
-    {
-        data.setQuizState(QuizTakingState.TAKING_QUIZ);
-        data.setQuizHash(quizHash);
-    
-        if (data.getAnswersList().size() != 0)
+        switch (currState)
+        {
+        case NOT_TAKING_QUIZ:
+            data.setPrelimQuestionsHash(prelimQuiz.hashCode());
+            if (prelimQuiz.size() > 0)
+            {
+                data.setQuizState(QuizTakingState.PRELIMINARY_QUESTIONS);
+                break;
+            }
+            
+        case PRELIMINARY_QUESTIONS:
+            data.setQuizHash(quiz.hashCode());
+            data.setQuizState(QuizTakingState.TAKING_QUIZ);
             data.resetAnswersList();
-    
-        saveChanges();
-    }
-    
-    public void setQuizToHousePicking()
-    {
-        data.setQuizState(QuizTakingState.SCHOOL_PICKING);
+            break;
+            
+        case TAKING_QUIZ:
+            data.setQuizState(QuizTakingState.SCHOOL_PICKING);
+            break;
+            
+        case SCHOOL_PICKING:
+            data.setQuizState(QuizTakingState.QUIZ_TAKEN);
+        }
         
         saveChanges();
     }
     
-    public void setQuizToTaken()
-    {
-        data.setQuizState(QuizTakingState.QUIZ_TAKEN);
-        
-        saveChanges();
-    }
-    
-    public void resetQuiz()
+    public void unsetQuiz()
     {
         data.setQuizState(QuizTakingState.NOT_TAKING_QUIZ);
         data.setPrelimQuestionsHash(0);

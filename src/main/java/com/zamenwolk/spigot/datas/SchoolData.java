@@ -60,7 +60,7 @@ public class SchoolData extends DataModel implements Serializable
         Map<String, Pair<Supplier<Object>, Consumer<Object>>> modelIO = new HashMap<>();
     
         modelIO.put("name", Pair.of(this::getName,
-                                     (Object o) ->
+                                     o ->
                                      {
                                          if (o != null && o instanceof String)
                                              setName((String) o);

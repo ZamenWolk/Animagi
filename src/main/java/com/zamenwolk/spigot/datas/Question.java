@@ -19,32 +19,42 @@ import java.util.Map;
  */
 public class Question implements ConfigExtractible
 {
-    private String                questionText;
-    private Map<String, Response> responseMap;
+    private String              questionText;
+    private Map<String, Answer> answerMap;
     
     public Question()
     {
         questionText = "";
-        responseMap = new HashMap<>();
+        answerMap = new HashMap<>();
     }
     
     public boolean isAnswerValid(String answer)
     {
-        return responseMap
+        return answerMap
                 .entrySet()
                 .parallelStream()
-                .anyMatch((Map.Entry<String, Response> e) -> e.getKey().equalsIgnoreCase(answer));
+                .anyMatch(e -> e.getKey().equalsIgnoreCase(answer));
     }
     
-    public Response getAnswer(String answer)
+    public Answer getAnswer(String answer)
     {
-        for (Map.Entry<String, Response> e : responseMap.entrySet())
+        for (Map.Entry<String, Answer> e : answerMap.entrySet())
         {
             if (e.getKey().equalsIgnoreCase(answer))
                 return e.getValue();
         }
         
         return null;
+    }
+    
+    public String getQuestionText()
+    {
+        return questionText;
+    }
+    
+    public Map<String, Answer> getAnswerMap()
+    {
+        return answerMap;
     }
     
     @Override
@@ -64,13 +74,13 @@ public class Question implements ConfigExtractible
     
         try
         {
-            responseMap = ConfigExtractor.createMap(Response.class, confMap);
+            answerMap = ConfigExtractor.createMap(Answer.class, confMap);
         }
         catch (InvocationTargetException e)
         {
             throw new IllegalArgumentException("Invocation target exception", e);
         }
-        if (responseMap.size() == 0)
+        if (answerMap.size() == 0)
             throw new IllegalArgumentException("No answers given for question");
     }
     
@@ -83,14 +93,14 @@ public class Question implements ConfigExtractible
         Question question = (Question) o;
         
         if (!questionText.equals(question.questionText)) return false;
-        return responseMap.equals(question.responseMap);
+        return answerMap.equals(question.answerMap);
     }
     
     @Override
     public int hashCode()
     {
         int result = questionText.hashCode();
-        result = 31 * result + responseMap.hashCode();
+        result = 31 * result + answerMap.hashCode();
         return result;
     }
 }

@@ -9,6 +9,7 @@ package com.zamenwolk.spigot.helper;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Optional;
+import java.util.Set;
 
 /**
  * Author: Martin
@@ -23,6 +24,11 @@ public class IndexFinder <Key, Data>
     {
         this.index = index != null ? index : new HashMap<>();
         this.aliases = aliases != null ? aliases : new HashMap<>();
+    }
+    
+    public Set<Key> getKeys()
+    {
+        return index.keySet();
     }
     
     public Data find(Key key, boolean allowAliases)
@@ -51,7 +57,7 @@ public class IndexFinder <Key, Data>
     {
         Optional<Map.Entry<Key, Data>> res = index.entrySet()
                                                   .stream()
-                                                  .filter((Map.Entry<Key, Data> e) -> ((String)e.getKey()).equalsIgnoreCase(key))
+                                                  .filter(e -> ((String)e.getKey()).equalsIgnoreCase(key))
                                                   .findFirst();
         
         return res.isPresent() ? res.get().getValue() : null;

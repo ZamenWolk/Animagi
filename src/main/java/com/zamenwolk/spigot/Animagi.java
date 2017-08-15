@@ -18,9 +18,7 @@ import org.bukkit.plugin.java.JavaPlugin;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.lang.reflect.InvocationTargetException;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import java.util.stream.Collectors;
@@ -44,15 +42,6 @@ public class Animagi extends JavaPlugin
     public static File dataFolder()
     {
         return dataFolder;
-    }
-    
-    public static List<House> getHousesOfSchool(School school)
-    {
-        return houses.entrySet()
-                     .stream() //Make stream
-                     .filter((Map.Entry<String, House> e) -> e.getValue().getSchool().equals(school)) //Filter with house name
-                     .map(Map.Entry::getValue) //Map to stream of House objects
-                     .collect(Collectors.toList()); //Make to list
     }
     
     @Override
@@ -86,6 +75,25 @@ public class Animagi extends JavaPlugin
         return houseFinder.find(houseName, true);
     }
     
+    public static Set<String> getSchoolNames()
+    {
+        return schoolFinder.getKeys();
+    }
+    
+    public static List<House> getHousesOfSchool(School school)
+    {
+        return houses.entrySet()
+                     .stream() //Make stream
+                     .filter(e -> e.getValue().getSchool().equals(school)) //Filter with house name
+                     .map(Map.Entry::getValue) //Map to stream of House objects
+                     .collect(Collectors.toList()); //Make to list
+    }
+    
+    public static List<Question> getQuiz()
+    {
+        return new ArrayList<>(quiz);
+    }
+    
     private void unloadData()
     {
         dataFolder = null;
@@ -105,6 +113,8 @@ public class Animagi extends JavaPlugin
         getCommand("createProfile").setExecutor(new CreateProfileCommand());
         getCommand("setHouse").setExecutor(new SetHouseCommand());
         getCommand(pluginName).setExecutor(new VersionCommand(getDescription().getName(), getDescription().getVersion()));
+        getCommand("quiz").setExecutor(new QuizCommand(quiz));
+        getCommand("unsetSorting").setExecutor(new UnsetSortingCommand());
     }
     
     private void loadData()

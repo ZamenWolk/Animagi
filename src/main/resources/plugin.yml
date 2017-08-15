@@ -34,3 +34,7 @@ commands:
   quiz:
     description: Take quiz or view question
     usage: /quiz (reponse)
+
+  unsetSorting:
+    description: Resets the quiz and sorting of a player
+    usage: /unsetSorting <player>

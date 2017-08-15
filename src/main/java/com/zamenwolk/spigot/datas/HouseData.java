@@ -126,14 +126,14 @@ public class HouseData extends DataModel implements Serializable, ConfigExtracti
         Map<String, Pair<Supplier<Object>, Consumer<Object>>> dataModelIO = new HashMap<>();
         
         dataModelIO.put("name", Pair.of(this::getName,
-                                        (Object o) ->
+                                        o ->
                                         {
                                             if (o != null && o instanceof String)
                                                 setName((String) o);
                                         }));
         
         dataModelIO.put("school", Pair.of(() -> this.getSchool().getName(),
-                                          (Object o) ->
+                                          o ->
                                           {
                                               if (o != null && o instanceof String)
                                                   school = Animagi.findSchool((String) o);
@@ -142,7 +142,7 @@ public class HouseData extends DataModel implements Serializable, ConfigExtracti
                                           }));
         
         dataModelIO.put("points", Pair.of(this::getPoints,
-                                          (Object o) -> {
+                                          o -> {
                                               if (o != null)
                                                   setPoints((Integer) o);
                                           }));
