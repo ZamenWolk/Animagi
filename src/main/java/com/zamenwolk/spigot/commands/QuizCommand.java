@@ -75,7 +75,7 @@ public class QuizCommand implements CommandExecutor
         
         quizState = profile.getQuizState();
         
-        if (!handleChange(profile) && args.length != 0)
+        if (!handleChange(target, profile) && args.length != 0)
         {
             switch (quizState)
             {
@@ -87,7 +87,7 @@ public class QuizCommand implements CommandExecutor
                 playerPrelimAns.add(answer);
                 if (playerPrelimAns.size() == preliminary.size())
                 {
-                    onEndOfPreliminary(profile);
+                    onEndOfPreliminary(target, profile);
                     profile.advanceQuiz(preliminary, quiz);
                 }
                 break;
@@ -175,7 +175,7 @@ public class QuizCommand implements CommandExecutor
         target.sendMessage(s);
     }
     
-    private boolean handleChange(PlayerProfile profile)
+    private boolean handleChange(Player target, PlayerProfile profile)
     {
         QuizTakingState quizState = profile.getQuizState();
         
@@ -184,7 +184,7 @@ public class QuizCommand implements CommandExecutor
             if ((preliminary.hashCode() != profile.getPrelimQuestionsHash()) ||
                 (quizState != QuizTakingState.PRELIMINARY_QUESTIONS && quiz.hashCode() != profile.getQuizHash()))
             {
-                resetQuiz(profile);
+                resetQuiz(target, profile);
                 return true;
             }
         }
@@ -192,10 +192,8 @@ public class QuizCommand implements CommandExecutor
         return false;
     }
     
-    private void resetQuiz(PlayerProfile profile)
+    private void resetQuiz(Player target, PlayerProfile profile)
     {
-        Player target = Bukkit.getPlayer(profile.getPlayerID());
-        
         target.sendMessage("The quiz has changed after you started answering it ! Your answers have been deleted. Please start over. Sorry for the inconvenience.");
         
         profile.unsetQuiz();
@@ -203,13 +201,15 @@ public class QuizCommand implements CommandExecutor
         prelimAns.remove(profile.getPlayerID());
     }
     
-    private void onEndOfPreliminary(PlayerProfile profile) //TODO check this is correct, probably buggy
+    private void onEndOfPreliminary(Player target, PlayerProfile profile)
     {
         List<String> currPrelim = prelimAns.get(profile.getPlayerID());
         String realName = currPrelim.get(0) + " " + currPrelim.get(1);
         
         profile.setRealName(realName);
-        Bukkit.getPlayer(profile.getPlayerID()).setDisplayName(realName);
+        
+        target.setDisplayName(realName);
+        prelimAns.remove(target.getUniqueId());
     }
     
     private House sort(PlayerProfile profile, School schoolSorted)

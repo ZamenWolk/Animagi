@@ -109,12 +109,10 @@ public class Animagi extends JavaPlugin
         
         getCommand("profile").setExecutor(new ProfileCommand());
         getCommand("points").setExecutor(new PointsCommand());
-        getCommand("enableQuiz").setExecutor(new EnableQuizCommand());
-        getCommand("createProfile").setExecutor(new CreateProfileCommand());
-        getCommand("setHouse").setExecutor(new SetHouseCommand());
         getCommand(pluginName).setExecutor(new VersionCommand(getDescription().getName(), getDescription().getVersion()));
         getCommand("quiz").setExecutor(new QuizCommand(quiz));
-        getCommand("unsetSorting").setExecutor(new UnsetSortingCommand());
+        getCommand("manageprofile").setExecutor(new ManageProfileCommand());
+        //getCommand("manageprofile");
     }
     
     private void loadData()

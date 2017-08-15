@@ -15,18 +15,6 @@ commands:
     description: List, add or remove points to houses
     usage: /points list <school> {or} /points <give/take> <point number> <player> <reason>
 
-  enableQuiz:
-    description: Enables a player to take the sorting quiz
-    usage: /enableQuiz <player>
-
-  setHouse:
-    description: Sets a player's house without him having to take the quiz
-    usage: /setHouse <player> <house name>
-
-  createProfile:
-    description: Creates a player's profile in case it is not yet created
-    usage: /createProfile <player>
-
   animagi:
     description: Get plugin version
     usage: /animagi
@@ -35,6 +23,7 @@ commands:
     description: Take quiz or view question
     usage: /quiz (reponse)
 
-  unsetSorting:
-    description: Resets the quiz and sorting of a player
-    usage: /unsetSorting <player>
+  manageprofile:
+    description: Allows to manage profiles
+    usage: /manageprofile <create/sethouse/resetsorting/enablequiz> (arguments)
+    aliases: mngprofile
