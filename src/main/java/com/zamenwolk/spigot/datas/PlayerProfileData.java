@@ -6,7 +6,7 @@
 
 package com.zamenwolk.spigot.datas;
 
-import com.zamenwolk.spigot.Animagi;
+import com.zamenwolk.spigot.dependencyInjection.DepContext;
 import com.zamenwolk.spigot.helper.DataModel;
 import org.apache.commons.lang3.tuple.Pair;
 
@@ -204,7 +204,7 @@ public class PlayerProfileData extends DataModel implements Serializable
                                      o -> {
                                          if (o != null && o instanceof String)
                                          {
-                                             House currHouse = Animagi.findHouse((String) o);
+                                             House currHouse = DepContext.getHouseFinder().find((String) o, true);
                                              if (currHouse == null)
                                                  throw new IllegalArgumentException("House \"" + o + "\" non-existant");
                                              

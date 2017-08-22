@@ -7,6 +7,7 @@ import com.zamenwolk.spigot.datas.PlayerProfile;
 import com.zamenwolk.spigot.datas.ProfileCache;
 import com.zamenwolk.spigot.datas.School;
 import com.zamenwolk.spigot.helper.CmdParamUtils;
+import com.zamenwolk.spigot.helper.IndexFinder;
 import com.zamenwolk.spigot.helper.SubbedCommand;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
@@ -25,11 +26,17 @@ import java.util.Map;
 public class PointsCommand extends SubbedCommand
 {
     private ProfileCache cache;
+    private IndexFinder<String, School> schoolFinder;
     private Map<String, CommandExecutor> subCommands;
+    private Animagi plugin;
     
-    public PointsCommand()
+    public PointsCommand(ProfileCache cache,
+                         IndexFinder<String, School> schoolFinder,
+                         Animagi plugin)
     {
-        cache = ProfileCache.getInstance();
+        this.cache = cache;
+        this.plugin = plugin;
+        this.schoolFinder = schoolFinder;
     }
     
     @Override
@@ -57,7 +64,7 @@ public class PointsCommand extends SubbedCommand
                 return false;
             }
     
-            School school = Animagi.findSchool(CmdParamUtils.fromArg(args[0]));
+            School school = schoolFinder.find(CmdParamUtils.fromArg(args[0]), true);
     
             if (school == null)
             {
@@ -65,7 +72,7 @@ public class PointsCommand extends SubbedCommand
                 return false;
             }
     
-            List<House> houses = Animagi.getHousesOfSchool(school);
+            List<House> houses = plugin.getHousesOfSchool(school);
     
             if (houses.size() == 0)
                 sender.sendMessage(ChatColor.YELLOW + "No houses in this school !" + ChatColor.RESET);

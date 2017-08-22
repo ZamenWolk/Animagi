@@ -20,9 +20,9 @@ public class ProfileCommand extends TargetCommandExecutor
 {
     private ProfileCache cache;
     
-    public ProfileCommand()
+    public ProfileCommand(ProfileCache cache)
     {
-        cache = ProfileCache.getInstance();
+        this.cache = cache;
     }
     
     @Override

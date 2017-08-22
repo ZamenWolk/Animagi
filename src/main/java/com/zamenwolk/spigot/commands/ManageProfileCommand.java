@@ -7,9 +7,9 @@
 package com.zamenwolk.spigot.commands;
 
 import com.google.common.collect.Lists;
-import com.zamenwolk.spigot.Animagi;
 import com.zamenwolk.spigot.datas.*;
 import com.zamenwolk.spigot.helper.CmdParamUtils;
+import com.zamenwolk.spigot.helper.IndexFinder;
 import com.zamenwolk.spigot.helper.SubbedCommand;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
@@ -30,16 +30,29 @@ public class ManageProfileCommand extends SubbedCommand
 {
     private Map<String, CommandExecutor> subCommands;
     
+    private List<Question> quiz;
+    private IndexFinder<String, House> houseFinder;
+    private ProfileCache cache;
+    
+    public ManageProfileCommand(List<Question> quiz,
+                                IndexFinder<String, House> houseFinder,
+                                ProfileCache cache)
+    {
+        this.quiz = quiz;
+        this.houseFinder = houseFinder;
+        this.cache = cache;
+    }
+    
     @Override
     protected Map<String, CommandExecutor> subCommands()
     {
         if (subCommands == null)
         {
             subCommands = new HashMap<>();
-            subCommands.put("enablequiz", new EnableQuiz());
-            subCommands.put("create", new Create());
-            subCommands.put("sethouse", new SetHouse());
-            subCommands.put("resetsorting", new ResetSorting());
+            subCommands.put("enablequiz", new EnableQuiz(cache));
+            subCommands.put("create", new Create(cache));
+            subCommands.put("sethouse", new SetHouse(cache));
+            subCommands.put("resetsorting", new ResetSorting(cache));
         }
     
         return subCommands;
@@ -48,10 +61,10 @@ public class ManageProfileCommand extends SubbedCommand
     private class EnableQuiz implements CommandExecutor
     {
         private ProfileCache cache;
-        
-        public EnableQuiz()
+    
+        public EnableQuiz(ProfileCache cache)
         {
-            cache = ProfileCache.getInstance();
+            this.cache = cache;
         }
         
         @Override
@@ -96,7 +109,7 @@ public class ManageProfileCommand extends SubbedCommand
             else
             {
                 sender.sendMessage("Enabling quiz for this player !");
-                profile.advanceQuiz(QuizCommand.getPrelimQuiz(), Animagi.getQuiz());
+                profile.advanceQuiz(QuizCommand.getPrelimQuiz(), quiz);
                 notifyPlayer(target, true);
             }
             
@@ -119,12 +132,12 @@ public class ManageProfileCommand extends SubbedCommand
     private class Create implements CommandExecutor
     {
         private ProfileCache cache;
-        
-        public Create()
+    
+        public Create(ProfileCache cache)
         {
-            cache = ProfileCache.getInstance();
+            this.cache = cache;
         }
-        
+    
         @Override
         public boolean onCommand(CommandSender sender, Command command, String label, String[] args)
         {
@@ -157,12 +170,12 @@ public class ManageProfileCommand extends SubbedCommand
     private class SetHouse implements CommandExecutor
     {
         private ProfileCache cache;
-        
-        public SetHouse()
+    
+        public SetHouse(ProfileCache cache)
         {
-            cache = ProfileCache.getInstance();
+            this.cache = cache;
         }
-        
+    
         @Override
         public boolean onCommand(CommandSender sender, Command command, String label, String[] args)
         {
@@ -190,7 +203,7 @@ public class ManageProfileCommand extends SubbedCommand
                 return true;
             }
             
-            house = Animagi.findHouse(CmdParamUtils.fromArg(args[1]));
+            house = houseFinder.find(CmdParamUtils.fromArg(args[1]), true);
             
             if (house == null)
             {
@@ -208,12 +221,12 @@ public class ManageProfileCommand extends SubbedCommand
     private class ResetSorting implements CommandExecutor
     {
         private ProfileCache cache;
-        
-        public ResetSorting()
+    
+        public ResetSorting(ProfileCache cache)
         {
-            cache = ProfileCache.getInstance();
+            this.cache = cache;
         }
-        
+    
         @Override
         public boolean onCommand(CommandSender sender, Command command, String label, String[] args)
         {

@@ -15,14 +15,14 @@ public class House extends DataManager<HouseData> implements ConfigExtractible
 {
     private static final String houseFolder = "houses/";
     
-    public House(String houseFile) throws FileNotFoundException
+    public House(File dataFolder, String houseFile) throws FileNotFoundException
     {
-        super(new File(Animagi.dataFolder(), houseFolder + houseFile));
+        super(new File(dataFolder, houseFolder + houseFile));
     }
     
-    public House(HouseData data)
+    public House(File dataFolder, HouseData data)
     {
-        super(data, new File(Animagi.dataFolder(), houseFolder + data.getName()));
+        super(data, new File(dataFolder, houseFolder + data.getName()));
     }
     
     public String getName()

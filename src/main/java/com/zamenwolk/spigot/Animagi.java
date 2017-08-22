@@ -8,6 +8,7 @@ package com.zamenwolk.spigot;
 
 import com.zamenwolk.spigot.commands.*;
 import com.zamenwolk.spigot.datas.*;
+import com.zamenwolk.spigot.dependencyInjection.DepContext;
 import com.zamenwolk.spigot.helper.ConfigExtractor;
 import com.zamenwolk.spigot.helper.IndexFinder;
 import org.bukkit.configuration.Configuration;
@@ -32,55 +33,42 @@ public class Animagi extends JavaPlugin
     private static final String dataOrganizationFile = "dataConf.yml";
     private static final String quizConfigFile       = "quizConf.yml";
     
-    private static List<Question>      quiz;
-    private static File                dataFolder;
-    private static Map<String, School> schools;
-    private static Map<String, House>  houses;
-    private static IndexFinder<String, School> schoolFinder;
-    private static IndexFinder<String, House> houseFinder;
+    private List<Question>      quiz;
+    private Map<String, School> schools;
+    private Map<String, House>  houses;
+    private IndexFinder<String, School> schoolFinder;
+    private IndexFinder<String, House> houseFinder;
+    private ProfileCache cache;
+    private File dataFolder;
     
-    public static File dataFolder()
+    IndexFinder<String, School> getSchoolFinder()
     {
-        return dataFolder;
+        return schoolFinder;
+    }
+    
+    IndexFinder<String, House> getHouseFinder()
+    {
+        return houseFinder;
     }
     
     @Override
     public void onDisable()
     {
         logger.info("[ANM] Disabling plugin");
-        unloadData();
     }
     
     @Override
     public void onEnable()
     {
+        DefaultDepContext.setContext(this);
+        
         logger.info("[ANM] Loading plugin");
         loadData();
         loadCommands();
         logger.info("[ANM] Plugin loaded successfully");
     }
     
-    public static School findSchool(String schoolName)
-    {
-        return findSchool(schoolName, true);
-    }
-    
-    public static School findSchool(String schoolName, boolean allowAliases)
-    {
-        return schoolFinder.find(schoolName, allowAliases);
-    }
-    
-    public static House findHouse(String houseName)
-    {
-        return houseFinder.find(houseName, true);
-    }
-    
-    public static Set<String> getSchoolNames()
-    {
-        return schoolFinder.getKeys();
-    }
-    
-    public static List<House> getHousesOfSchool(School school)
+    public List<House> getHousesOfSchool(School school)
     {
         return houses.entrySet()
                      .stream() //Make stream
@@ -89,29 +77,20 @@ public class Animagi extends JavaPlugin
                      .collect(Collectors.toList()); //Make to list
     }
     
-    public static List<Question> getQuiz()
+    public File getPluginDataFolder()
     {
-        return new ArrayList<>(quiz);
-    }
-    
-    private void unloadData()
-    {
-        dataFolder = null;
-        schools = null;
-        schoolFinder = null;
-        houses = null;
-        houseFinder = null;
+        return dataFolder;
     }
     
     private void loadCommands()
     {
         String pluginName = getDescription().getName().toLowerCase();
         
-        getCommand("profile").setExecutor(new ProfileCommand());
-        getCommand("points").setExecutor(new PointsCommand());
+        getCommand("profile").setExecutor(new ProfileCommand(cache));
+        getCommand("points").setExecutor(new PointsCommand(cache, schoolFinder, this));
         getCommand(pluginName).setExecutor(new VersionCommand(getDescription().getName(), getDescription().getVersion()));
-        getCommand("quiz").setExecutor(new QuizCommand(quiz));
-        getCommand("manageprofile").setExecutor(new ManageProfileCommand());
+        getCommand("quiz").setExecutor(new QuizCommand(quiz, cache, schoolFinder, this));
+        getCommand("manageprofile").setExecutor(new ManageProfileCommand(quiz, houseFinder, cache));
         //getCommand("manageprofile");
     }
     
@@ -120,6 +99,7 @@ public class Animagi extends JavaPlugin
         dataFolder = new File(this.getDataFolder(), "data/");
         schools = new HashMap<>();
         houses = new HashMap<>();
+        cache = new ProfileCache();
         
         try
         {
@@ -156,12 +136,12 @@ public class Animagi extends JavaPlugin
         {
             try
             {
-                schools.put(school, new School(school));
+                schools.put(school, new School(new File(getDataFolder(), School.schoolFolder), school));
             }
             catch (FileNotFoundException e)
             {
                 logger.warning("[ANM] School " + school + " not found and will be created ! Make sure it's normal ! Is it the first time using the plugin here ? Did you change the config ?");
-                schools.put(school, new School(new SchoolData(school)));
+                schools.put(school, new School(new File(getDataFolder(), School.schoolFolder), new SchoolData(school)));
             }
         }
         
@@ -185,13 +165,13 @@ public class Animagi extends JavaPlugin
                 ConfigurationSection houseConf = (ConfigurationSection) houseEntry.getValue();
                 try
                 {
-                    houses.put(houseName, new House(houseName));
+                    houses.put(houseName, new House(DepContext.getDataFolder(), houseName));
                 }
                 catch (FileNotFoundException e)
                 {
                     logger.warning("[ANM] House " + houseName + " not found and will be created ! Make sure it's normal ! Is it the first time using the plugin here ? Did you change the config ?");
-                    School currSchool = findSchool(school);
-                    houses.put(houseName, new House(new HouseData(houseName, currSchool, 0)));
+                    School currSchool = schoolFinder.find(school, true);
+                    houses.put(houseName, new House(DepContext.getDataFolder(), new HouseData(houseName, currSchool, 0)));
                 }
     
                 ConfigExtractor.setObject(houses.get(houseName), houseConf);

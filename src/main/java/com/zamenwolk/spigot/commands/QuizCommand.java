@@ -9,6 +9,7 @@ package com.zamenwolk.spigot.commands;
 import com.zamenwolk.spigot.Animagi;
 import com.zamenwolk.spigot.datas.*;
 import com.zamenwolk.spigot.helper.CmdParamUtils;
+import com.zamenwolk.spigot.helper.IndexFinder;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.command.Command;
@@ -25,7 +26,7 @@ import java.util.stream.Collectors;
  */
 public class QuizCommand implements CommandExecutor
 {
-    private static final List<String> preliminary = new ArrayList<>();
+    private static final List<String> preliminary = new ArrayList<>(); //TODO change this
     
     static {
         preliminary.add("What is your first name ?");
@@ -39,13 +40,20 @@ public class QuizCommand implements CommandExecutor
     
     private List<Question> quiz;
     private ProfileCache cache;
+    private IndexFinder<String, School> schoolFinder;
+    private Animagi plugin;
     
     private Map<UUID, List<String>> prelimAns;
     
-    public QuizCommand(List<Question> quiz)
+    public QuizCommand(List<Question> quiz,
+                       ProfileCache cache,
+                       IndexFinder<String, School> schoolFinder,
+                       Animagi plugin)
     {
         this.quiz = quiz != null ? quiz : new ArrayList<>();
-        cache = ProfileCache.getInstance();
+        this.cache = cache;
+        this.schoolFinder = schoolFinder;
+        this.plugin = plugin;
         prelimAns = new HashMap<>();
     }
     
@@ -109,7 +117,7 @@ public class QuizCommand implements CommandExecutor
                 break;
                 
             case SCHOOL_PICKING:
-                School schoolToSort = Animagi.findSchool(CmdParamUtils.fromArg(args[0]));
+                School schoolToSort = schoolFinder.find(CmdParamUtils.fromArg(args[0]), true);
                 
                 if (schoolToSort == null)
                 {
@@ -148,7 +156,7 @@ public class QuizCommand implements CommandExecutor
         case SCHOOL_PICKING:
             List<String> schoolPick = new ArrayList<>();
             schoolPick.add("Now is the time to pick your school ? Where do you want to go ?");
-            schoolPick.addAll(Animagi.getSchoolNames());
+            schoolPick.addAll(schoolFinder.getKeys());
             printQuestion(target, schoolPick.toArray(new String[]{}));
             break;
         }
@@ -214,7 +222,7 @@ public class QuizCommand implements CommandExecutor
     
     private House sort(PlayerProfile profile, School schoolSorted)
     {
-        List<House> potentials = Animagi.getHousesOfSchool(schoolSorted);
+        List<House> potentials = plugin.getHousesOfSchool(schoolSorted);
         List<String> quizAnswers = profile.getAnswersList();
         Map<String, Double> playerTraits = new HashMap<>();
         Map<House, Double> housePoints = new HashMap<>();

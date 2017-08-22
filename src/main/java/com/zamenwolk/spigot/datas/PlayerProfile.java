@@ -15,14 +15,14 @@ public class PlayerProfile extends DataManager<PlayerProfileData>
 {
     private static final String profileFolder = "profiles/";
     
-    public PlayerProfile(UUID playerUuid) throws FileNotFoundException
+    public PlayerProfile(File dataFolder, UUID playerUuid) throws FileNotFoundException
     {
-        super(new File(Animagi.dataFolder(), profileFolder + playerUuid.toString()));
+        super(new File(dataFolder, profileFolder + playerUuid.toString()));
     }
     
-    public PlayerProfile(PlayerProfileData data)
+    public PlayerProfile(File dataFolder, PlayerProfileData data)
     {
-        super(data, new File(Animagi.dataFolder(), profileFolder + data.getPlayerID().toString()));
+        super(data, new File(dataFolder, profileFolder + data.getPlayerID().toString()));
     }
     
     public String getRealName()

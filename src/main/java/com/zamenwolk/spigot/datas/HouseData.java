@@ -6,7 +6,7 @@
 
 package com.zamenwolk.spigot.datas;
 
-import com.zamenwolk.spigot.Animagi;
+import com.zamenwolk.spigot.dependencyInjection.DepContext;
 import com.zamenwolk.spigot.helper.ConfigExtractible;
 import com.zamenwolk.spigot.helper.DataModel;
 import org.apache.commons.lang3.tuple.Pair;
@@ -136,7 +136,7 @@ public class HouseData extends DataModel implements Serializable, ConfigExtracti
                                           o ->
                                           {
                                               if (o != null && o instanceof String)
-                                                  school = Animagi.findSchool((String) o);
+                                                  school = DepContext.getSchoolFinder().find((String) o, true);
                                               if (school == null)
                                                   throw new IllegalArgumentException("School \"" + o + "\" non-existant");
                                           }));

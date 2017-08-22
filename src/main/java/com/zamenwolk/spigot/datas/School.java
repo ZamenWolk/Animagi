@@ -11,16 +11,16 @@ import java.io.FileNotFoundException;
  */
 public class School extends DataManager<SchoolData>
 {
-    private static final String schoolFolder = "schools/";
+    public static final String schoolFolder = "schools/";
     
-    public School(String schoolFile) throws FileNotFoundException
+    public School(File dataFolder, String schoolFile) throws FileNotFoundException
     {
-        super(new File(Animagi.dataFolder(), schoolFolder + schoolFile));
+        super(new File(dataFolder, schoolFolder + schoolFile));
     }
     
-    public School(SchoolData data)
+    public School(File dataFolder, SchoolData data)
     {
-        super(data, new File(Animagi.dataFolder(), schoolFolder + data.getName()));
+        super(data, new File(dataFolder, schoolFolder + data.getName()));
     }
     
     public String getName()

@@ -12,6 +12,8 @@
 
 package com.zamenwolk.spigot.datas;
 
+import com.zamenwolk.spigot.dependencyInjection.DepContext;
+
 import java.io.FileNotFoundException;
 import java.util.HashMap;
 import java.util.Map;
@@ -25,16 +27,9 @@ public class ProfileCache
 {
     private Map<UUID, PlayerProfile> profileMap;
     
-    private ProfileCache()
+    public ProfileCache()
     {
         profileMap = new HashMap<>();
-    }
-    
-    private static final ProfileCache INSTANCE = new ProfileCache();
-    
-    public static ProfileCache getInstance()
-    {
-        return INSTANCE;
     }
     
     public PlayerProfile getProfile(UUID playerID)
@@ -46,7 +41,7 @@ public class ProfileCache
     
         try
         {
-            profile = new PlayerProfile(playerID);
+            profile = new PlayerProfile(DepContext.getDataFolder(), playerID);
             profileMap.put(playerID, profile);
             return profile;
         }
@@ -61,7 +56,7 @@ public class ProfileCache
         if (profileMap.get(data.getPlayerID()) != null)
             return profileMap.get(data.getPlayerID());
     
-        PlayerProfile profile = new PlayerProfile(data);
+        PlayerProfile profile = new PlayerProfile(DepContext.getDataFolder(), data);
         profileMap.put(profile.getPlayerID(), profile);
         return profile;
     }
