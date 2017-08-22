@@ -1,5 +1,5 @@
 name: Animagi
-version: 1.0.0-SNAPSHOT
+version: 1.0.0
 description: Animagi plugin for Obscurus server
 load: STARTUP
 author: ZamenWolk
