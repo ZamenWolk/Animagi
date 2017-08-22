@@ -2,7 +2,7 @@ import java.text.SimpleDateFormat
 
 group 'com.zamenwolk.spigot'
 version ''
-def projVersion = '1.0.0-SNAPSHOT'
+def projVersion = '1.0.0'
 
 apply plugin: 'java'
 
