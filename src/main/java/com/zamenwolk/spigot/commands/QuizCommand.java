@@ -26,34 +26,26 @@ import java.util.stream.Collectors;
  */
 public class QuizCommand implements CommandExecutor
 {
-    private static final List<String> preliminary = new ArrayList<>(); //TODO change this
-    
-    static {
-        preliminary.add("What is your first name ?");
-        preliminary.add("What is your last name ?");
-    }
-    
-    public static List<String> getPrelimQuiz()
-    {
-        return new ArrayList<>(preliminary);
-    }
-    
     private List<Question> quiz;
     private ProfileCache cache;
     private IndexFinder<String, School> schoolFinder;
     private Animagi plugin;
+    private List<String> preliminary;
     
     private Map<UUID, List<String>> prelimAns;
     
     public QuizCommand(List<Question> quiz,
                        ProfileCache cache,
                        IndexFinder<String, School> schoolFinder,
-                       Animagi plugin)
+                       Animagi plugin,
+                       List<String> preliminary)
     {
         this.quiz = quiz != null ? quiz : new ArrayList<>();
         this.cache = cache;
         this.schoolFinder = schoolFinder;
         this.plugin = plugin;
+        this.preliminary = preliminary;
+        
         prelimAns = new HashMap<>();
     }
     
@@ -132,15 +124,12 @@ public class QuizCommand implements CommandExecutor
                                                               " has been sorted to " +
                                                               sortedHouse.getName() +
                                                               " ! Welcome !" + ChatColor.RESET);
-                //TODO put here any additional
-    
                 profile.advanceQuiz(preliminary, quiz);
                 break;
             }
         }
     
         //Display current question
-        //TODO Display current question
         quizState = profile.getQuizState();
         
         switch (quizState)
