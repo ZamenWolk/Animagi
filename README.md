@@ -1,6 +1,6 @@
 # Animagi
 
-This repository holds the source code of the Animagi plugin, the main plugin of the [Obscurus](obscurus.enjin.com) minecraft server.
+This repository holds the source code of the Animagi plugin, the main plugin of the now defunt Obscurus minecraft server.
 It will be eventually responsible of the handling of all the magic, houses, classes, and sorting process on said server.
 
 ## Getting Started
