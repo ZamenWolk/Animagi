@@ -42,5 +42,3 @@ See also the list of [contributors](https://github.com/ZamenWolk/Animagi/contrib
 
 This project is licensed under the MPL-2.0 License - see the [LICENSE.md](LICENSE.md) file for details
 
-On top of the MPL-2.0, in order to use this plugin in any way, you have to clearly put the name of the server it was originally designed for (Obscurus), as well as provide a link to the server website.
-
